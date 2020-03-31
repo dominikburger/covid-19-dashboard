@@ -1,0 +1,7 @@
+.idea
+
+# data folder
+/data/external/*
+/data/interim/*
+/data/processed/*
+/data/raw/*
