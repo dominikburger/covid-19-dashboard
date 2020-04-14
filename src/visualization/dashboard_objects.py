@@ -205,35 +205,54 @@ graph_map_style = {
 }
 
 table_style = {
-                        'width': '25%',
-                        'display': 'inline-block',
-                        'marginLeft': 0,
-                        'marginRight': 0,
-                        'marginTop': 0,
-                        'marginBottom': 0,
-                        'backgroundColor': '#232e4a',
-                    }
+    'width': '25%',
+    'display': 'inline-block',
+    'marginLeft': 0,
+    'marginRight': 0,
+    'marginTop': 0,
+    'marginBottom': 0,
+    'backgroundColor': '#232e4a',
+}
 
 timeseries_style = {
-                        'height': '30%',
-                        'width': '66%',
-                        'display': 'inline-block',
-                        'marginLeft': 0,
-                        'marginRight': 0,
-                        'marginTop': 0,
-                        'marginBottom': 0,
-                        'backgroundColor': '#232e4a',
-                        # 'border': '2px black solid',
-                    }
+    'height': '30%',
+    'width': '66%',
+    'display': 'inline-block',
+    'marginLeft': 0,
+    'marginRight': 0,
+    'marginTop': 0,
+    'marginBottom': 0,
+    'backgroundColor': '#232e4a',
+    # 'border': '2px black solid',
+}
 
 country_picker_style = {
-                        'height': '10%',
-                        'width': '32%',
-                        'display': 'inline-block',
-                        'marginLeft': 0,
-                        'marginRight': 0,
-                        'marginTop': 0,
-                        'marginBottom': 0,
-                        'backgroundColor': '#232e4a',
-                        # 'border': 'blue',
-                    }
+    'height': '10%',
+    'width': '32%',
+    'display': 'inline-block',
+    'marginLeft': 0,
+    'marginRight': 0,
+    'marginTop': 0,
+    'marginBottom': 0,
+    'backgroundColor': '#232e4a',
+    # 'border': 'blue',
+}
+
+cumulated_info_style = {
+    'width': '25%',
+    'marginBottom': 50,
+    'marginTop': 25
+}
+
+caption_confirmed_style = {
+    'color': 'white',
+    'fontSize': 16,
+    'textAlign': 'center',
+    'padding': 10
+}
+
+value_confirmed_style = {
+    'color': 'red',
+    'fontSize': 16,
+    'textAlign': 'center',
+}
