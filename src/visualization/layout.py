@@ -9,11 +9,11 @@ import src.visualization.dashboard_objects as dbo
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 
-def generate_dataframe():
+def generate_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
 
     for day in days:
-        temp = pd.read_csv(processed_dir / f'{day}.csv')
+        temp = pd.read_csv(path / f'{day}.csv')
         temp.loc[:, 'date'] = pd.to_datetime(day)
         dataframe = dataframe.append(temp)
 
@@ -26,7 +26,7 @@ processed_dir = base_dir / 'data' / 'processed' / 'daily_report'
 days = pd.date_range('01/22/2020', '04/13/2020', normalize=True)
 days = days.strftime('%m-%d-%Y')
 
-df = generate_dataframe()
+df = generate_dataframe(path=processed_dir, days=days)
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.layout = html.Div(
@@ -34,7 +34,7 @@ app.layout = html.Div(
     style={'backgroundColor': '#232e4a'},
     children=[
         # set page header
-        html.H4(children='COVID-Dashboard'),
+        html.H4(children='COVID-19 Dashboard', style={'color': 'white'}),
         # 1st row place date picker
         html.Div(
             children=dbo.generate_date_picker(),
@@ -91,6 +91,7 @@ app.layout = html.Div(
                         )
 
                     ],
+                    style=dbo.cumulated_info_style
                 ),
                 # place map graph
                 html.Div(
@@ -111,7 +112,7 @@ app.layout = html.Div(
         html.Div(
             id='third_div_row',
             className='row',
-            style={'display': 'flex'},
+            style={'display': 'flex', 'marginTop': 10},
             children=[
                 # place timeseries
                 html.Div(
@@ -132,16 +133,26 @@ app.layout = html.Div(
 
 
 @app.callback(
-
-    [Output('graph-map', 'figure'),
-
-     Output('table-info-div', 'children')],
+    [
+        Output('graph-map', 'figure'),
+        Output('table-info-div', 'children'),
+        Output('value_confirmed_cases_total', 'children'),
+        Output('value_confirmed_deaths_total', 'children'),
+        Output('value_confirmed_recovered_total', 'children'),
+        Output('value_confirmed_active_total', 'children')
+    ],
     [Input('date-picker', 'date')])
 def update_output(date):
     map_graph = dbo.generate_map(df, date=pd.to_datetime(date))
     table_info = dbo.generate_table(df, date=pd.to_datetime(date))
 
-    return map_graph, table_info
+    day_mask = df['date'] == pd.to_datetime(date)
+    cases_total = df[day_mask]['confirmed'].sum()
+    deaths_total = df[day_mask]['deaths'].sum()
+    recovered_total = df[day_mask]['recovered'].sum()
+    active_total = df[day_mask]['active'].sum()
+
+    return map_graph, table_info, cases_total, deaths_total, recovered_total, active_total
 
 
 if __name__ == '__main__':
