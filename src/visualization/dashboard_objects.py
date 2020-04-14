@@ -4,6 +4,8 @@ import dash_table
 import pandas as pd
 import plotly.graph_objs as go
 
+from dash_table.Format import Format
+
 
 def generate_date_picker():
     return dcc.DatePickerSingle(
@@ -38,8 +40,8 @@ def generate_map(df, date=None):
         # title_text = 'World Map',
         geo_scope='world',
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        paper_bgcolor='#3b5998',
-        plot_bgcolor='#3b5998'
+        paper_bgcolor='#232e4a',
+        plot_bgcolor='#232e4a'
     )
 
     fig.update_geos(
@@ -101,7 +103,7 @@ def generate_ccd(df):
 
     fig.update_layout(
         # title_text = 'World Map',
-        margin={"r": 0, "t": 0, "l": 0, "b": 0},
+        margin={"r": 25, "t": 25, "l": 25, "b": 25},
         paper_bgcolor='#84A295'
     )
 
@@ -121,47 +123,25 @@ def generate_table(df=None, date=None):
 
     table = dash_table.DataTable(
         id='table-info',
-        columns=[{"name": i.capitalize(), "id": i} for i in df[columns].columns],
+        columns=[{"name": i.capitalize(), "id": i} for i in columns],
         data=df.to_dict('records'),
         style_table={
             'maxHeight': '55ex',
             'overflowY': 'scroll',
+            'type': 'numeric'
             # 'border': 'thin lightgrey solid'
         },
-        style_cell_conditional=[
-            {'if': {'column_id': 'country'}, 'width': '50%'},
-            # {'if': {'column_id': 'Region'}, 'width': '30%'},
-        ],
-        fixed_rows={'headers': True, 'data': 0},
-        page_action='none',
-        sort_action='native'
-    )
-
-    return table
-
-
-def generate_table2(df=None, date=None):
-    if date is not None:
-        df = df[df['date'] == pd.to_datetime(date)]
-    else:
-        df = df[df['date'] == pd.to_datetime('04-04-2020')]
-
-    columns = ['country', 'confirmed', 'deaths', 'recovered']
-
-    df = df[columns].copy()
-    df = df.sort_values(by=columns[1], ascending=False)
-
-    table = dash_table.DataTable(
-        id='table-info2',
-        columns=[{"name": i.capitalize(), "id": i} for i in df[columns].columns],
-        data=df.to_dict('records'),
-        style_table={
-            'maxHeight': '55ex',
-            'overflowY': 'scroll',
-            # 'border': 'thin lightgrey solid'
+        style_cell={
+            'fontSize': 18,
+            'font-family': 'sans-serif'
         },
         style_cell_conditional=[
-            {'if': {'column_id': 'country'}, 'width': '50%'},
+            {'if': {'column_id': 'country'},
+             'width': '50%'},
+            {'if': {'column_id': 'confirmed'},
+             'type': 'numeric',
+             'format': Format(group=',')
+             }
             # {'if': {'column_id': 'Region'}, 'width': '30%'},
         ],
         fixed_rows={'headers': True, 'data': 0},
@@ -194,8 +174,14 @@ date_picker_style = {
     'backgroundColor': '#232e4a'
 }
 
+cumulated_info_style = {
+    'width': '20%',
+    'marginBottom': 50,
+    'marginTop': 25
+}
+
 graph_map_style = {
-    'width': '50%',
+    'width': '41%',
     'display': 'inline-block',
     'marginLeft': 0,
     'marginRight': 0,
@@ -205,10 +191,10 @@ graph_map_style = {
 }
 
 table_style = {
-    'width': '25%',
+    'width': '38%',
     'display': 'inline-block',
-    'marginLeft': 0,
-    'marginRight': 0,
+    'marginLeft': '5%',
+    'marginRight': '5%',
     'marginTop': 0,
     'marginBottom': 0,
     'backgroundColor': '#232e4a',
@@ -216,7 +202,7 @@ table_style = {
 
 timeseries_style = {
     'height': '30%',
-    'width': '66%',
+    'width': '30%',
     'display': 'inline-block',
     'marginLeft': 0,
     'marginRight': 0,
@@ -227,8 +213,8 @@ timeseries_style = {
 }
 
 country_picker_style = {
-    'height': '10%',
-    'width': '32%',
+    # 'height': '10%',
+    'width': '15%',
     'display': 'inline-block',
     'marginLeft': 0,
     'marginRight': 0,
@@ -238,21 +224,15 @@ country_picker_style = {
     # 'border': 'blue',
 }
 
-cumulated_info_style = {
-    'width': '25%',
-    'marginBottom': 50,
-    'marginTop': 25
-}
-
 caption_confirmed_style = {
     'color': 'white',
-    'fontSize': 16,
+    'fontSize': 20,
     'textAlign': 'center',
     'padding': 10
 }
 
 value_confirmed_style = {
     'color': 'red',
-    'fontSize': 16,
+    'fontSize': 22,
     'textAlign': 'center',
 }
