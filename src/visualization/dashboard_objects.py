@@ -8,9 +8,9 @@ import plotly.graph_objs as go
 def generate_date_picker():
     return dcc.DatePickerSingle(
         id='date-picker',
-        min_date_allowed=dt(2020,1,22),
-        max_date_allowed=dt(2020,4,10),
-        initial_visible_month=dt(2020,3,15),
+        min_date_allowed=dt(2020, 1, 22),
+        max_date_allowed=dt(2020, 4, 13),
+        initial_visible_month=dt(2020, 3, 15),
         date=str(dt(2020, 3, 15)),
         display_format='MM/DD/YYYY',
     )
@@ -107,6 +107,7 @@ def generate_ccd(df):
 
     return fig
 
+
 def generate_table(df=None, date=None):
     if date is not None:
         df = df[df['date'] == pd.to_datetime(date)]
@@ -137,6 +138,7 @@ def generate_table(df=None, date=None):
     )
 
     return table
+
 
 def generate_table2(df=None, date=None):
     if date is not None:
@@ -180,3 +182,58 @@ def generate_country_picker(dataframe=None):
         multi=True
     )
     return checklist
+
+
+date_picker_style = {
+    'width': '50%',
+    'display': 'inline-block',
+    'marginLeft': 10,
+    'marginRight': 0,
+    'marginTop': 0,
+    'marginBottom': 0,
+    'backgroundColor': '#232e4a'
+}
+
+graph_map_style = {
+    'width': '50%',
+    'display': 'inline-block',
+    'marginLeft': 0,
+    'marginRight': 0,
+    'marginTop': 0,
+    'marginBottom': 0,
+    'backgroundColor': '#232e4a',
+}
+
+table_style = {
+                        'width': '25%',
+                        'display': 'inline-block',
+                        'marginLeft': 0,
+                        'marginRight': 0,
+                        'marginTop': 0,
+                        'marginBottom': 0,
+                        'backgroundColor': '#232e4a',
+                    }
+
+timeseries_style = {
+                        'height': '30%',
+                        'width': '66%',
+                        'display': 'inline-block',
+                        'marginLeft': 0,
+                        'marginRight': 0,
+                        'marginTop': 0,
+                        'marginBottom': 0,
+                        'backgroundColor': '#232e4a',
+                        # 'border': '2px black solid',
+                    }
+
+country_picker_style = {
+                        'height': '10%',
+                        'width': '32%',
+                        'display': 'inline-block',
+                        'marginLeft': 0,
+                        'marginRight': 0,
+                        'marginTop': 0,
+                        'marginBottom': 0,
+                        'backgroundColor': '#232e4a',
+                        # 'border': 'blue',
+                    }
