@@ -52,42 +52,42 @@ app.layout = html.Div(
                         html.Div(
                             id='caption_confirmed_cases_total',
                             children='Confirmed Cases Total',
-                            style=dbo.caption_confirmed_style
+                            style=dbo.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_cases_total',
                             children='123456',
-                            style=dbo.value_confirmed_style
+                            style=dbo.value_case_style
                         ),
                         html.Div(
                             id='caption_confirmed_deaths_total',
                             children='Confirmed Deaths Total',
-                            style=dbo.caption_confirmed_style
+                            style=dbo.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_deaths_total',
                             children='123456',
-                            style=dbo.value_confirmed_style
+                            style=dbo.value_case_style
                         ),
                         html.Div(
                             id='caption_confirmed_recovered_total',
                             children='Confirmed Recovered Total',
-                            style=dbo.caption_confirmed_style
+                            style=dbo.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_recovered_total',
                             children='123456',
-                            style=dbo.value_confirmed_style
+                            style=dbo.value_case_style
                         ),
                         html.Div(
                             id='caption_confirmed_active_total',
                             children='Confirmed Active Total',
-                            style=dbo.caption_confirmed_style
+                            style=dbo.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_active_total',
                             children='123456',
-                            style=dbo.value_confirmed_style
+                            style=dbo.value_case_style
                         )
 
                     ],
@@ -118,7 +118,9 @@ app.layout = html.Div(
                 html.Div(
                     children=dcc.Graph(
                         id='timeseries',
-                        figure=dbo.generate_ccd(df)),
+                        figure=dbo.TimeSeriesGraph(
+                            data=df
+                        ).generate_timeseries()),
                     style=dbo.timeseries_style
                 ),
 
@@ -152,7 +154,10 @@ def update_output(date):
     recovered_total = df[day_mask]['recovered'].sum()
     active_total = df[day_mask]['active'].sum()
 
-    return map_graph, table_info, cases_total, deaths_total, recovered_total, active_total
+    return (
+        map_graph, table_info, cases_total,
+        deaths_total, recovered_total, active_total
+        )
 
 
 if __name__ == '__main__':

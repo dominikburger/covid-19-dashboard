@@ -57,57 +57,82 @@ def generate_map(df, date=None):
     return fig
 
 
-def generate_ccd(df):
-    def get_min_mask(data, factor):
+class TimeSeriesGraph:
+
+    def __init__(self, data):
+        self.data = data.copy()
+        self.data_pivot = None
+        self.country_list = None
+        self.fig = None
+
+    def _create_pivot_table(self):
+        self.data_pivot = self.data.pivot(
+            index='date', columns='country', values=['confirmed']
+        )
+
+    @staticmethod
+    def _get_min_mask(data, factor):
         mask = data.ge(factor)
         return mask
 
-    df_pivot = df.pivot(index='date', columns='country', values=['confirmed'])
+    def _mask_country(self, country):
+        mask = self.data_pivot.columns.get_level_values(1) == country
+        masked_country = self.data_pivot.iloc[:, mask].copy()
 
-    country_list = [
-        'Germany',
-        'US',
-        'France',
-        'Spain',
-        'Italy',
-        'Belgium',
-        'Denmark',
-        'Switzerland'
-    ]
+        return masked_country
 
-    fig = go.Figure()
+    def _select_country(self, country_list):
 
-    for country in country_list:
-        # select country
-        mask = df_pivot.columns.get_level_values(1) == country
-        df_c = df_pivot.iloc[:, mask]
+        if isinstance(country_list, str):
+            self.country_list = list(country_list)
+        if isinstance(country_list, list):
+            self.country_list = country_list
+        else:
+            raise ValueError
 
-        # transform dataframe to series
-        df_c = df_c.squeeze()
+    def generate_timeseries(self):
 
-        # get disease outbreak day
-        mask_min = get_min_mask(df_c, 100)
-        df_c = df_c[mask_min]
-        df_c = df_c.reset_index(drop=True)
-
-        # create graph
-        graph = go.Scatter(
-            x=df_c.index,
-            y=df_c,
-            name=country,
-            mode='lines+markers'
+        self._create_pivot_table()
+        self._select_country(
+            country_list=[
+                'Germany',
+                'US',
+                'France',
+                'Spain',
+                'Italy',
+                'Belgium',
+                'Denmark',
+                'Switzerland'
+            ]
         )
 
-        # add graph to figure
-        fig.add_trace(graph)
+        self.fig = go.Figure()
+        self.fig.update_layout(
+            margin={"r": 25, "t": 25, "l": 25, "b": 25},
+            paper_bgcolor='#232e4a'
+        )
 
-    fig.update_layout(
-        # title_text = 'World Map',
-        margin={"r": 25, "t": 25, "l": 25, "b": 25},
-        paper_bgcolor='#84A295'
-    )
+        for country in self.country_list:
+            masked_country = self._mask_country(country)
+            masked_country = masked_country.squeeze()
 
-    return fig
+            # get disease outbreak day
+            mask_min = self._get_min_mask(masked_country, 100)
+            masked_country = masked_country[mask_min]
+            masked_country = masked_country.reset_index(drop=True)
+
+            # create graph
+            graph = go.Scatter(
+                x=masked_country.index,
+                y=masked_country,
+                name=country,
+                mode='lines+markers'
+            )
+
+            # add graph to figure
+            self.fig.add_trace(graph)
+
+        return self.fig
 
 
 def generate_table(df=None, date=None):
@@ -154,7 +179,8 @@ def generate_table(df=None, date=None):
 
 def generate_country_picker(dataframe=None):
     country_list = sorted(dataframe['country'].unique())
-    country_options = [{"label": country, "value": country} for country in country_list]
+    country_options = [{"label": country, "value": country}
+                       for country in country_list]
 
     checklist = dcc.Dropdown(
         options=country_options,
@@ -224,14 +250,14 @@ country_picker_style = {
     # 'border': 'blue',
 }
 
-caption_confirmed_style = {
+caption_case_style = {
     'color': 'white',
     'fontSize': 20,
     'textAlign': 'center',
     'padding': 10
 }
 
-value_confirmed_style = {
+value_case_style = {
     'color': 'red',
     'fontSize': 22,
     'textAlign': 'center',
