@@ -41,7 +41,13 @@ app.layout = html.Div(
     style={'backgroundColor': '#232e4a'},
     children=[
         # set page header
-        html.H4(children='COVID-19 Dashboard', style={'color': 'white'}),
+        html.H4(
+            children='COVID-19 Dashboard',
+            style={
+                'color': 'white',
+                'padding': 10,
+            }
+        ),
         # 1st row place date picker
         html.Div(
             children=dbo.generate_date_picker(),
@@ -182,8 +188,6 @@ def update_output(date):
         Input('country_picker_dropdown', 'value')
     ])
 def update_output(scale, country_list):
-    print(scale)
-    print(country_list)
     ts = dbo.TimeSeriesGraph(data=df, country_list=country_list, scale=scale)
     fig = ts.generate_timeseries()
     return [fig]
