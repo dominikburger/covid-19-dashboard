@@ -28,6 +28,10 @@ days = days.strftime('%m-%d-%Y')
 
 df = generate_dataframe(path=processed_dir, days=days)
 
+cl = ['Germany', 'France', 'Spain', 'Italy']
+
+ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list=cl)
+
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.layout = html.Div(
     id='main-window',
@@ -61,7 +65,7 @@ app.layout = html.Div(
                         ),
                         html.Div(
                             id='caption_confirmed_deaths_total',
-                            children='Confirmed Deaths Total',
+                            children='Deaths Total',
                             style=dbo.caption_case_style
                         ),
                         html.P(
@@ -71,7 +75,7 @@ app.layout = html.Div(
                         ),
                         html.Div(
                             id='caption_confirmed_recovered_total',
-                            children='Confirmed Recovered Total',
+                            children='Recovered Total',
                             style=dbo.caption_case_style
                         ),
                         html.P(
@@ -81,7 +85,7 @@ app.layout = html.Div(
                         ),
                         html.Div(
                             id='caption_confirmed_active_total',
-                            children='Confirmed Active Total',
+                            children='Active Total',
                             style=dbo.caption_case_style
                         ),
                         html.P(
@@ -114,24 +118,41 @@ app.layout = html.Div(
             className='row',
             style={'display': 'flex', 'marginTop': 10},
             children=[
+                html.Div(
+                    children=[
+                        html.Div(
+                            id='scale_selector',
+                            children=dcc.RadioItems(
+                                id='scale_radio',
+                                options=[
+                                    {'label': 'linear', 'value': 'linear'},
+                                    {'label': 'logarithmic', 'value': 'log'},
+                                ],
+                                value='linear'
+                            ),
+                            style={'color': 'white', 'padding': 10}
+                        ),
+                        # place country selector
+                        html.Div(
+                            id='country_picker',
+                            children=dbo.generate_country_picker(df),
+                            style=dbo.country_picker_style
+                        )
+                    ],
+                    style={'width': '20%'}
+                ),
                 # place timeseries
                 html.Div(
                     children=dcc.Graph(
                         id='timeseries',
-                        figure=dbo.TimeSeriesGraph(
-                            data=df
-                        ).generate_timeseries()),
-                    style=dbo.timeseries_style
-                ),
-
-                # place country selector
-                html.Div(
-                    children=dbo.generate_country_picker(df),
-                    style=dbo.country_picker_style
-                ),
+                        figure=ts.generate_timeseries(),
+                        style=dbo.timeseries_style
+                    ),
+                )
             ],
         )
-    ])
+    ]
+)
 
 
 @app.callback(
@@ -157,7 +178,21 @@ def update_output(date):
     return (
         map_graph, table_info, cases_total,
         deaths_total, recovered_total, active_total
-        )
+    )
+
+
+@app.callback(
+    [Output('timeseries', 'figure')],
+    [
+        Input('scale_radio', 'value'),
+        Input('country_picker_dropdown', 'value')
+    ])
+def update_output(scale, country_list):
+    print(scale)
+    print(country_list)
+    ts = dbo.TimeSeriesGraph(data=df, country_list=country_list, scale=scale)
+    fig = ts.generate_timeseries()
+    return [fig]
 
 
 if __name__ == '__main__':
