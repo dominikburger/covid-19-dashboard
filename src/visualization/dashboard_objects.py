@@ -2,6 +2,7 @@ from datetime import datetime as dt
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
+import numpy as np
 import plotly.graph_objs as go
 
 from dash_table.Format import Format
@@ -59,25 +60,34 @@ def generate_map(df, date=None):
 
 class TimeSeriesGraph:
 
-    def __init__(self, data):
+    def __init__(self, data, country_list, scale):
         self.data = data.copy()
         self.data_pivot = None
-        self.country_list = None
+        self.scale = scale
         self.fig = go.Figure()
         self.fig.update_layout(
             margin={"r": 25, "t": 25, "l": 25, "b": 25},
             paper_bgcolor='#232e4a',
             font={
-                # 'family': 'sans-serif',
-                # 'size': '12',
+                'family': 'sans-serif',
+                'size': 12,
                 'color': 'white',
             }
         )
+
+        self._create_pivot_table()
+        self._select_country(country_list)
 
     def _create_pivot_table(self):
         self.data_pivot = self.data.pivot(
             index='date', columns='country', values=['confirmed']
         )
+
+    def _scale_values(self, data):
+        if self.scale == 'linear' or self.scale is None:
+            return data
+        elif self.scale == 'log':
+            return np.log(data)
 
     @staticmethod
     def _get_min_mask(data, factor):
@@ -93,27 +103,11 @@ class TimeSeriesGraph:
     def _select_country(self, country_list):
 
         if isinstance(country_list, str):
-            self.country_list = list(country_list)
+            self.country_list = [country_list]
         if isinstance(country_list, list):
             self.country_list = country_list
-        else:
-            raise ValueError
 
     def generate_timeseries(self):
-
-        self._create_pivot_table()
-        self._select_country(
-            country_list=[
-                'Germany',
-                'US',
-                'France',
-                'Spain',
-                'Italy',
-                'Belgium',
-                'Denmark',
-                'Switzerland'
-            ]
-        )
 
         for country in self.country_list:
             masked_country = self._mask_country(country)
@@ -123,6 +117,8 @@ class TimeSeriesGraph:
             mask_min = self._get_min_mask(masked_country, 100)
             masked_country = masked_country[mask_min]
             masked_country = masked_country.reset_index(drop=True)
+            masked_country = self._scale_values(masked_country)
+
 
             # create graph
             graph = go.Scatter(
@@ -186,8 +182,9 @@ def generate_country_picker(dataframe=None):
                        for country in country_list]
 
     checklist = dcc.Dropdown(
+        id='country_picker_dropdown',
         options=country_options,
-        value=['Germany'],
+        value=['Germany', 'France', 'Spain', 'Italy'],
         multi=True
     )
     return checklist
@@ -230,8 +227,8 @@ table_style = {
 }
 
 timeseries_style = {
-    'height': '30%',
-    'width': '30%',
+    # 'height': '30%',
+    'width': '100%',
     'display': 'inline-block',
     'marginLeft': 0,
     'marginRight': 0,
@@ -243,12 +240,12 @@ timeseries_style = {
 
 country_picker_style = {
     # 'height': '10%',
-    'width': '15%',
+    'width': '80%',
     'display': 'inline-block',
-    'marginLeft': 0,
+    'marginLeft': 10,
     'marginRight': 0,
-    'marginTop': 0,
-    'marginBottom': 0,
+    'marginTop': 25,
+    'marginBottom': 50,
     'backgroundColor': '#232e4a',
     # 'border': 'blue',
 }
