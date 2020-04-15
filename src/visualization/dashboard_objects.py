@@ -7,6 +7,13 @@ import plotly.graph_objs as go
 
 from dash_table.Format import Format
 
+import yaml
+from pathlib import Path
+
+
+filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
+styles = yaml.safe_load(open(filepath))
+
 
 def generate_date_picker():
     return dcc.DatePickerSingle(
@@ -176,6 +183,19 @@ def generate_table(df=None, date=None):
     return table
 
 
+def generate_scale():
+    return dcc.RadioItems(
+        id='scale_radio',
+        options=[
+            {'label': 'linear', 'value': 'linear'},
+            {'label': 'logarithmic', 'value': 'log'},
+        ],
+        value='linear',
+        labelStyle={'display': 'inline-block'},
+        style=styles['scale_style']
+    )
+
+
 def generate_country_picker(dataframe=None):
     country_list = sorted(dataframe['country'].unique())
     country_options = [{"label": country, "value": country}
@@ -185,80 +205,7 @@ def generate_country_picker(dataframe=None):
         id='country_picker_dropdown',
         options=country_options,
         value=['Germany', 'France', 'Spain', 'Italy'],
-        multi=True
+        multi=True,
+        style=styles['country_picker_style']
     )
     return checklist
-
-
-date_picker_style = {
-    'width': '50%',
-    'display': 'inline-block',
-    'marginLeft': 10,
-    'marginRight': 0,
-    'marginTop': 0,
-    'marginBottom': 0,
-    'backgroundColor': '#232e4a'
-}
-
-cumulated_info_style = {
-    'width': '20%',
-    'marginBottom': 50,
-    'marginTop': 25
-}
-
-graph_map_style = {
-    'width': '41%',
-    'display': 'inline-block',
-    'marginLeft': 0,
-    'marginRight': 0,
-    'marginTop': 0,
-    'marginBottom': 0,
-    'backgroundColor': '#232e4a',
-}
-
-table_style = {
-    'width': '38%',
-    'display': 'inline-block',
-    'marginLeft': '5%',
-    'marginRight': '5%',
-    'marginTop': 0,
-    'marginBottom': 0,
-    'backgroundColor': '#232e4a',
-}
-
-timeseries_style = {
-    # 'height': '30%',
-    'width': '100%',
-    'display': 'inline-block',
-    'marginLeft': 0,
-    'marginRight': 0,
-    'marginTop': 0,
-    'marginBottom': 0,
-    'backgroundColor': '#232e4a',
-    # 'border': '2px black solid',
-}
-
-country_picker_style = {
-    # 'height': '10%',
-    'width': '80%',
-    'display': 'inline-block',
-    'marginLeft': 10,
-    'marginRight': 0,
-    'marginTop': 25,
-    'marginBottom': 50,
-    'backgroundColor': '#232e4a',
-    # 'border': 'blue',
-}
-
-caption_case_style = {
-    'color': 'white',
-    'fontSize': 20,
-    'textAlign': 'center',
-    'padding': 10
-}
-
-value_case_style = {
-    'color': 'red',
-    'fontSize': 22,
-    'textAlign': 'center',
-}
