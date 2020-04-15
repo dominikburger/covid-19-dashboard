@@ -63,7 +63,16 @@ class TimeSeriesGraph:
         self.data = data.copy()
         self.data_pivot = None
         self.country_list = None
-        self.fig = None
+        self.fig = go.Figure()
+        self.fig.update_layout(
+            margin={"r": 25, "t": 25, "l": 25, "b": 25},
+            paper_bgcolor='#232e4a',
+            font={
+                # 'family': 'sans-serif',
+                # 'size': '12',
+                'color': 'white',
+            }
+        )
 
     def _create_pivot_table(self):
         self.data_pivot = self.data.pivot(
@@ -104,12 +113,6 @@ class TimeSeriesGraph:
                 'Denmark',
                 'Switzerland'
             ]
-        )
-
-        self.fig = go.Figure()
-        self.fig.update_layout(
-            margin={"r": 25, "t": 25, "l": 25, "b": 25},
-            paper_bgcolor='#232e4a'
         )
 
         for country in self.country_list:
