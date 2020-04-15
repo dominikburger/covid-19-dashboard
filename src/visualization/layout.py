@@ -5,6 +5,8 @@ import dash_core_components as dcc
 from pathlib import Path
 import pandas as pd
 import src.visualization.dashboard_objects as dbo
+import yaml
+
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -26,11 +28,12 @@ processed_dir = base_dir / 'data' / 'processed' / 'daily_report'
 days = pd.date_range('01/22/2020', '04/13/2020', normalize=True)
 days = days.strftime('%m-%d-%Y')
 
+filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
+styles = yaml.safe_load(open(filepath))
+
 df = generate_dataframe(path=processed_dir, days=days)
 
-cl = ['Germany', 'France', 'Spain', 'Italy']
-
-ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list=cl)
+ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
 app.layout = html.Div(
@@ -42,7 +45,7 @@ app.layout = html.Div(
         # 1st row place date picker
         html.Div(
             children=dbo.generate_date_picker(),
-            style=dbo.date_picker_style
+            style=dbo.styles['date_picker_style']
         ),
         # 2nd row place map and country table
         html.Div(
@@ -56,59 +59,59 @@ app.layout = html.Div(
                         html.Div(
                             id='caption_confirmed_cases_total',
                             children='Confirmed Cases Total',
-                            style=dbo.caption_case_style
+                            style=dbo.styles['caption_case_style']
                         ),
                         html.P(
                             id='value_confirmed_cases_total',
                             children='123456',
-                            style=dbo.value_case_style
+                            style=dbo.styles['value_case_style']
                         ),
                         html.Div(
                             id='caption_confirmed_deaths_total',
                             children='Deaths Total',
-                            style=dbo.caption_case_style
+                            style=dbo.styles['caption_case_style']
                         ),
                         html.P(
                             id='value_confirmed_deaths_total',
                             children='123456',
-                            style=dbo.value_case_style
+                            style=dbo.styles['value_case_style']
                         ),
                         html.Div(
                             id='caption_confirmed_recovered_total',
                             children='Recovered Total',
-                            style=dbo.caption_case_style
+                            style=dbo.styles['caption_case_style']
                         ),
                         html.P(
                             id='value_confirmed_recovered_total',
                             children='123456',
-                            style=dbo.value_case_style
+                            style=dbo.styles['value_case_style']
                         ),
                         html.Div(
                             id='caption_confirmed_active_total',
                             children='Active Total',
-                            style=dbo.caption_case_style
+                            style=dbo.styles['caption_case_style']
                         ),
                         html.P(
                             id='value_confirmed_active_total',
                             children='123456',
-                            style=dbo.value_case_style
+                            style=dbo.styles['value_case_style']
                         )
 
                     ],
-                    style=dbo.cumulated_info_style
+                    style=dbo.styles['cumulated_info_style']
                 ),
                 # place map graph
                 html.Div(
                     dcc.Graph(
                         id='graph-map',
                         figure=dbo.generate_map(df)),
-                    style=dbo.graph_map_style
+                    style=dbo.styles['graph_map_style']
                 ),
                 # place country table
                 html.Div(
                     id='table-info-div',
                     children=dbo.generate_table(df),
-                    style=dbo.table_style
+                    style=dbo.styles['table_style']
                 )
             ],
         ),
@@ -119,34 +122,25 @@ app.layout = html.Div(
             style={'display': 'flex', 'marginTop': 10},
             children=[
                 html.Div(
+                    style={'width': '20%'},
                     children=[
                         html.Div(
                             id='scale_selector',
-                            children=dcc.RadioItems(
-                                id='scale_radio',
-                                options=[
-                                    {'label': 'linear', 'value': 'linear'},
-                                    {'label': 'logarithmic', 'value': 'log'},
-                                ],
-                                value='linear'
-                            ),
-                            style={'color': 'white', 'padding': 10}
+                            children=dbo.generate_scale()
                         ),
                         # place country selector
                         html.Div(
                             id='country_picker',
                             children=dbo.generate_country_picker(df),
-                            style=dbo.country_picker_style
                         )
                     ],
-                    style={'width': '20%'}
                 ),
                 # place timeseries
                 html.Div(
                     children=dcc.Graph(
                         id='timeseries',
                         figure=ts.generate_timeseries(),
-                        style=dbo.timeseries_style
+                        style=dbo.styles['timeseries_style']
                     ),
                 )
             ],
