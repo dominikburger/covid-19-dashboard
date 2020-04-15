@@ -157,14 +157,18 @@ def generate_table(df=None, date=None):
         columns=[{"name": i.capitalize(), "id": i} for i in columns],
         data=df.to_dict('records'),
         style_table={
-            'maxHeight': '55ex',
-            'overflowY': 'scroll',
-            'type': 'numeric'
+            'maxHeight': '26em',
+            'overflowY': 'auto',
             # 'border': 'thin lightgrey solid'
         },
+        style_header={
+            'fontWeight': 'bold'
+        },
         style_cell={
-            'fontSize': 18,
-            'font-family': 'sans-serif'
+            'fontSize': 16,
+            'font-family': 'sans-serif',
+            'color': '#bfc4dc',
+            'backgroundColor': '#232e4a'
         },
         style_cell_conditional=[
             {'if': {'column_id': 'country'},

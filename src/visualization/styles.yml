@@ -43,9 +43,10 @@ table_style:
   backgroundColor: '#232e4a'
   display: inline-block
   marginBottom: 0
-  marginLeft: 5%
-  marginRight: 5%
-  marginTop: 0
+  marginLeft: 4em
+  marginRight: 4em
+  marginTop: 2em
+  padding: 0
   width: 38%
 timeseries_style:
   backgroundColor: '#232e4a'
