@@ -25,7 +25,7 @@ def generate_dataframe(path=None, days=None):
 base_dir = Path().cwd()
 processed_dir = base_dir / 'data' / 'processed' / 'daily_report'
 
-days = pd.date_range('01/22/2020', '04/13/2020', normalize=True)
+days = pd.date_range('01/22/2020', '04/15/2020', normalize=True)
 days = days.strftime('%m-%d-%Y')
 
 filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'

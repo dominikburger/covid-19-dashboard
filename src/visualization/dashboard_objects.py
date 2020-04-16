@@ -48,8 +48,8 @@ def generate_map(df, date=None):
         # title_text = 'World Map',
         geo_scope='world',
         margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        paper_bgcolor='#232e4a',
-        plot_bgcolor='#232e4a'
+        paper_bgcolor='rgba(0,0,0,0)',
+        plot_bgcolor='rgba(0,0,0,0)'
     )
 
     fig.update_geos(
