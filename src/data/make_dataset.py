@@ -75,7 +75,7 @@ country_rename_dict = {
         'Hong Kong SAR': 'Hong Kong',
         'Iran (Islamic Republic of)': 'Iran',
         'Bahamas, The': 'Bahamas',
-        'US': 'USA',
+        'US': 'United States',
         'UK': 'United Kingdom',
         'Viet Nam': 'Vietnam',
         'Taipei and environs': 'Taiwan',
