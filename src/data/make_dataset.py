@@ -7,6 +7,7 @@ import numpy as np
 
 import os
 from pathlib import Path
+
 # from dotenv import find_dotenv, load_dotenv
 
 # get project top directory
@@ -17,7 +18,7 @@ ts_data = csse_data / 'csse_covid_19_time_series'
 processed_daily_dir = project_dir / 'data' / 'processed' / 'daily_report'
 
 
-def get_output_path(input_path=None, output_folder=None,  suffix='.csv'):
+def get_output_path(input_path=None, output_folder=None, suffix='.csv'):
     output_file = f'{Path(input_path).stem}{suffix}'
     output_path = output_folder / output_file
     return output_path
@@ -68,6 +69,43 @@ aggregation_dict = {
     'last_update': 'first'
 }
 
+country_rename_dict = {
+    'country': {
+        ' Azerbaijan': 'Azerbaijan',
+        'Hong Kong SAR': 'Hong Kong',
+        'Iran (Islamic Republic of)': 'Iran',
+        'Bahamas, The': 'Bahamas',
+        'US': 'USA',
+        'UK': 'United Kingdom',
+        'Viet Nam': 'Vietnam',
+        'Taipei and environs': 'Taiwan',
+        'North Ireland': 'United Kingdom',
+        'Macao SAR': 'Macau',
+        'Holy See': 'Vatican City',
+        'Taiwan*': 'Taiwan',
+        "Cote d'Ivoire": 'Ivory Coast',
+        'Republic of Ireland': 'Ireland',
+        'Republic of Korea': 'South Korea',
+        'Republic of Moldova': 'Moldova',
+        'Republic of the Congo': 'Congo',
+        'Russian Federation': 'Russia',
+        'Korea, South': 'South Korea',
+        'occupied Palestinian territory': 'Palestine',
+        'Cruise Ship': 'Others',
+        'Diamond Princess': 'Others',
+        'MS Zaandam': 'Others',
+        'Reunion': 'France',
+        'Channel Islands': 'United Kingdom',
+        'Czechia': 'Czech Republic',
+        'Mainland China': 'China',
+        'Macao': 'Macau',
+        'Gambia, The': 'The Gambia',
+        'Cape Verde': 'Cabo Verde',
+        'Timor-Leste': 'East Timor',
+        'St. Martin': 'Saint Martin'
+    }
+}
+
 
 def main():
     """ Runs data processing scripts to turn raw data from (../raw) into
@@ -78,12 +116,13 @@ def main():
 
     # get all raw daily reports
     path_list = sorted([path for path in daily_data.glob('*.csv')])
-    print(daily_data)
     for input_path in path_list:
         # read data
         df = pd.read_csv(input_path)
         # rename columns refering to schema
         df = df.rename(columns=column_schema)
+        # replace country names
+        df = df.replace(country_rename_dict)
         # add 'active' column if it doesn't exist
         if 'active' not in df.columns:
             df.loc[:, 'active'] = np.nan
