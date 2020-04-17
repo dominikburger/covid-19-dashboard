@@ -72,6 +72,7 @@ class TimeSeriesGraph:
         self.data_pivot = None
         self.scale = scale
         self.fig = go.Figure()
+
         self.fig.update_layout(
             margin={"r": 25, "t": 25, "l": 25, "b": 25},
             paper_bgcolor='#232e4a',
