@@ -10,7 +10,6 @@ from dash_table.Format import Format
 import yaml
 from pathlib import Path
 
-
 filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
 styles = yaml.safe_load(open(filepath))
 
@@ -42,25 +41,32 @@ def generate_map(df, date=None):
         showscale=False,
     )
 
-    fig = go.Figure(choro)
+    geo_settings = {
+        'resolution': 110,
+        'showcoastlines': True,
+        'coastlinecolor': 'black',
+        'showland': False,
+        'landcolor': 'LightGreen',
+        'showocean': True,
+        'oceancolor': '#bfc4dc',
+        'showlakes': False,
+        'lakecolor': "Blue",
+        'showrivers': False,
+        'rivercolor': "Blue",
+        'showframe': False,
+        'projection_type': 'equirectangular',
 
-    fig.update_layout(
-        # title_text = 'World Map',
-        geo_scope='world',
-        margin={"r": 0, "t": 0, "l": 0, "b": 0},
-        paper_bgcolor='rgba(0,0,0,0)',
-        plot_bgcolor='rgba(0,0,0,0)'
-    )
+    }
 
-    fig.update_geos(
-        resolution=110,
-        showcoastlines=True, coastlinecolor="black",
-        showland=False, landcolor="LightGreen",
-        showocean=True, oceancolor='#bfc4dc',
-        showlakes=False, lakecolor="Blue",
-        showrivers=False, rivercolor="Blue",
-        showframe=False, projection_type='equirectangular'
-    )
+    layout = {
+        'geo_scope': 'world',
+        'margin': {"r": 0, "t": 0, "l": 0, "b": 0},
+        'paper_bgcolor': 'rgba(0,0,0,0)',
+        'plot_bgcolor': 'rgba(0,0,0,0)',
+        'geo': geo_settings
+    }
+
+    fig = go.Figure(data=choro, layout=layout)
 
     return fig
 
@@ -127,7 +133,6 @@ class TimeSeriesGraph:
             masked_country = masked_country[mask_min]
             masked_country = masked_country.reset_index(drop=True)
             masked_country = self._scale_values(masked_country)
-
 
             # create graph
             graph = go.Scatter(
