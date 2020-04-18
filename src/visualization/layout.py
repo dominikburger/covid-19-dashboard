@@ -25,7 +25,7 @@ def generate_dataframe(path=None, days=None):
 base_dir = Path().cwd()
 processed_dir = base_dir / 'data' / 'processed' / 'daily_report'
 
-days = pd.date_range('01/22/2020', '04/15/2020', normalize=True)
+days = pd.date_range('01/22/2020', '04/17/2020', normalize=True)
 days = days.strftime('%m-%d-%Y')
 
 filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
@@ -121,26 +121,38 @@ app.layout = html.Div(
                 )
             ],
         ),
-        # 3rd row place timeseries and country selector
+        # 3rd row place toolbar
         html.Div(
             id='third_div_row',
             className='row',
-            style={'display': 'flex', 'marginTop': 10},
+            style={'display': 'flex', 'width': '100%'},
             children=[
                 html.Div(
-                    style={'width': '20%'},
+                    id='toolbar',
+                    className='row',
+                    style={'width': '100%', 'display': 'flex'},
                     children=[
                         html.Div(
                             id='scale_selector',
-                            children=dbo.generate_scale()
+                            children=dbo.generate_scale(),
+                            style=dbo.styles['scale_style']
                         ),
                         # place country selector
                         html.Div(
                             id='country_picker',
                             children=dbo.generate_country_picker(df),
+                            style=styles['country_picker_style']
                         )
                     ],
-                ),
+                )
+            ]
+        ),
+        # 4th row place timeseries and case development
+        html.Div(
+            id='fourth_div_row',
+            className='row',
+            style={'display': 'inline-block', 'width': '100%'},
+            children=[
                 # place timeseries
                 html.Div(
                     children=dcc.Graph(

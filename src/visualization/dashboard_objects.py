@@ -19,7 +19,7 @@ def generate_date_picker():
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
-        max_date_allowed=dt(2020, 4, 13),
+        max_date_allowed=dt(2020, 4, 17),
         initial_visible_month=dt(2020, 3, 15),
         date=str(dt(2020, 3, 15)),
         display_format='MM/DD/YYYY',
@@ -59,7 +59,7 @@ def generate_map(df, date=None):
         showocean=True, oceancolor='#bfc4dc',
         showlakes=False, lakecolor="Blue",
         showrivers=False, rivercolor="Blue",
-        showframe=False
+        showframe=False, projection_type='equirectangular'
     )
 
     return fig
@@ -74,13 +74,14 @@ class TimeSeriesGraph:
         self.fig = go.Figure()
 
         self.fig.update_layout(
-            margin={"r": 25, "t": 25, "l": 25, "b": 25},
+            margin={"r": 0, "t": 0, "l": 0, "b": 0},
             paper_bgcolor='#232e4a',
             font={
                 'family': 'sans-serif',
                 'size': 12,
                 'color': 'white',
-            }
+            },
+            legend_orientation='h'
         )
 
         self._create_pivot_table()
@@ -197,7 +198,7 @@ def generate_scale():
         ],
         value='linear',
         labelStyle={'display': 'inline-block'},
-        style=styles['scale_style']
+        # style=styles['scale_style']
     )
 
 
@@ -211,6 +212,6 @@ def generate_country_picker(dataframe=None):
         options=country_options,
         value=['Germany', 'France', 'Spain', 'Italy'],
         multi=True,
-        style=styles['country_picker_style']
+        # style=styles['country_picker_style']
     )
     return checklist
