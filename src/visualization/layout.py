@@ -7,7 +7,6 @@ import pandas as pd
 import src.visualization.dashboard_objects as dbo
 import yaml
 
-
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 
@@ -57,10 +56,11 @@ app.layout = html.Div(
         html.Div(
             id='second_div_row',
             className='row',
-            style={'display': 'flex'},
+            style={'display': 'flex', 'width': '100%'},
             children=[
                 html.Div(
                     id='cumulated_info',
+                    className='row',
                     children=[
                         html.Div(
                             id='caption_confirmed_cases_total',
@@ -124,26 +124,20 @@ app.layout = html.Div(
         # 3rd row place toolbar
         html.Div(
             id='third_div_row',
-            className='row',
+            className='col',
             style={'display': 'flex', 'width': '100%'},
             children=[
+                # place scale
                 html.Div(
-                    id='toolbar',
-                    className='row',
-                    style={'width': '100%', 'display': 'flex'},
-                    children=[
-                        html.Div(
-                            id='scale_selector',
-                            children=dbo.generate_scale(),
-                            style=dbo.styles['scale_style']
-                        ),
-                        # place country selector
-                        html.Div(
-                            id='country_picker',
-                            children=dbo.generate_country_picker(df),
-                            style=styles['country_picker_style']
-                        )
-                    ],
+                    id='scale_selector',
+                    children=dbo.generate_scale(),
+                    style=dbo.styles['scale_style']
+                ),
+                # place country selector
+                html.Div(
+                    id='country_picker',
+                    children=dbo.generate_country_picker(df),
+                    style=styles['country_picker_style']
                 )
             ]
         ),
