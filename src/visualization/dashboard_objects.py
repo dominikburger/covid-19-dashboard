@@ -14,7 +14,7 @@ filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
 styles = yaml.safe_load(open(filepath))
 
 
-def generate_date_picker():
+def make_date_picker():
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
@@ -25,7 +25,7 @@ def generate_date_picker():
     )
 
 
-def generate_map(df, date=None):
+def make_map(df, date=None):
     if date is not None:
         df_map = df[df['date'] == pd.to_datetime(date)]
     else:
@@ -122,7 +122,7 @@ class TimeSeriesGraph:
         if isinstance(country_list, list):
             self.country_list = country_list
 
-    def generate_timeseries(self):
+    def make_timeseries(self):
 
         for country in self.country_list:
             masked_country = self._mask_country(country)
@@ -148,7 +148,7 @@ class TimeSeriesGraph:
         return self.fig
 
 
-def generate_table(df=None, date=None):
+def make_table(df=None, date=None):
     if date is not None:
         df = df[df['date'] == pd.to_datetime(date)]
     else:
@@ -199,7 +199,7 @@ def generate_table(df=None, date=None):
     return table
 
 
-def generate_scale():
+def make_scale():
     return dcc.RadioItems(
         id='scale_radio',
         options=[
@@ -212,7 +212,7 @@ def generate_scale():
     )
 
 
-def generate_country_picker(dataframe=None):
+def make_country_picker(dataframe=None):
     country_list = sorted(dataframe['country'].unique())
     country_options = [{"label": country, "value": country}
                        for country in country_list]
