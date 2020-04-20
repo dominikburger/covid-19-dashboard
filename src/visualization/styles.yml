@@ -1,68 +1,79 @@
-caption_case_style:
-  color: white
-  fontSize: 20
-  padding: 10
-  textAlign: center
 cumulated_info_style:
   backgroundColor: 'black'
+  display: flex
+  flex-direction: column
+  flex-shrink: 0
   marginTop: 10
   marginBottom: 5
   marginLeft: 5
   marginRight: 5
-  width: 20%
+  width: 15%
   alignCenter: True
 date_picker_style:
   backgroundColor: 'black'
-  display: inline-block
+  display: flex
   marginTop: 10
   marginBottom: 5
   marginLeft: 10
   marginRight: 5
-  width: 20%
+  width: 25%
 graph_map_style:
   backgroundColor: 'black'
-  display: inline-block
+  display: flex
+  flex-shrink: 0
   marginTop: 10
   marginBottom: 5
   marginLeft: 5
   marginRight: 5
-  width: 41%
+  width: 50%
 table_style:
   backgroundColor: 'black'
-  display: inline-block
+  display: flex
+  flex-shrink: 0
   marginTop: 10
   marginBottom: 5
   marginLeft: 5
   marginRight: 5
   padding: 0
-  width: 38%
+  width: 33%
 scale_style:
   backgroundColor: 'black'
   color: 'white'
-  display: inline-block
+  display: flex
   marginTop: 5
   marginBottom: 5
   marginLeft: 5
   marginRight: 5
-  width: '20%'
-  justify: 'center'
+  height: 36px
+  width: 15%
+  justify: center
 country_picker_style:
   backgroundColor: 'black'
   marginTop: 5
   marginBottom: 5
   marginLeft: 5
   marginRight: 5
-  width: 40%
+  height: 36px
+  width: 50%
   textAlign: 'left'
 timeseries_style:
   backgroundColor: 'black'
-  display: inline-block
+  display: flex
+  flex-shrink: 0
   marginTop: 5
   marginBottom: 10
   marginLeft: 5
   marginRight: 5
-  width: 50%
+  width: 33%
+caption_case_style:
+  display: inline-block
+  color: white
+  fontSize: 20
+  textAlign: center
+  width: 100%
 value_case_style:
+  display: inline-block
   color: red
   fontSize: 22
   textAlign: center
+  width: 100%

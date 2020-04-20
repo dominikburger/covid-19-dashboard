@@ -166,6 +166,7 @@ def generate_table(df=None, date=None):
         style_table={
             'maxHeight': '26em',
             'overflowY': 'auto',
+            'width': '40em'
             # 'border': 'thin lightgrey solid'
         },
         style_header={
@@ -179,8 +180,12 @@ def generate_table(df=None, date=None):
         },
         style_cell_conditional=[
             {'if': {'column_id': 'country'},
-             'width': '50%'},
+             'width': '20%'},
             {'if': {'column_id': 'confirmed'},
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'if': {'column_id': 'deaths'},
              'type': 'numeric',
              'format': Format(group=',')
              }
