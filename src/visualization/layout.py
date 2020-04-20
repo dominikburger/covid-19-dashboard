@@ -10,7 +10,7 @@ import yaml
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 
-def generate_dataframe(path=None, days=None):
+def make_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
 
     for day in days:
@@ -30,11 +30,11 @@ days = days.strftime('%m-%d-%Y')
 filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
 styles = yaml.safe_load(open(filepath))
 
-df = generate_dataframe(path=processed_dir, days=days)
+df = make_dataframe(path=processed_dir, days=days)
 
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
-app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+app = dash.Dash('Covid-19 Dashboard', external_stylesheets=external_stylesheets)
 app.layout = html.Div(
     id='main-window',
     style={'backgroundColor': '#232e4a'},
@@ -49,7 +49,7 @@ app.layout = html.Div(
         ),
         # 1st row place date picker
         html.Div(
-            children=dbo.generate_date_picker(),
+            children=dbo.make_date_picker(),
             style=dbo.styles['date_picker_style']
         ),
         # 2nd row place map and country table
@@ -110,13 +110,13 @@ app.layout = html.Div(
                 html.Div(
                     dcc.Graph(
                         id='graph-map',
-                        figure=dbo.generate_map(df)),
+                        figure=dbo.make_map(df)),
                     style=dbo.styles['graph_map_style']
                 ),
                 # place country table
                 html.Div(
                     id='table-info-div',
-                    children=dbo.generate_table(df),
+                    children=dbo.make_table(df),
                     style=dbo.styles['table_style']
                 )
             ],
@@ -130,13 +130,13 @@ app.layout = html.Div(
                 # place scale
                 html.Div(
                     id='scale_selector',
-                    children=dbo.generate_scale(),
+                    children=dbo.make_scale(),
                     style=dbo.styles['scale_style']
                 ),
                 # place country selector
                 html.Div(
                     id='country_picker',
-                    children=dbo.generate_country_picker(df),
+                    children=dbo.make_country_picker(df),
                     style=styles['country_picker_style']
                 )
             ]
@@ -151,7 +151,7 @@ app.layout = html.Div(
                 html.Div(
                     children=dcc.Graph(
                         id='timeseries',
-                        figure=ts.generate_timeseries(),
+                        figure=ts.make_timeseries(),
                         style=dbo.styles['timeseries_style']
                     ),
                 )
@@ -172,8 +172,8 @@ app.layout = html.Div(
     ],
     [Input('date-picker', 'date')])
 def update_output(date):
-    map_graph = dbo.generate_map(df, date=pd.to_datetime(date))
-    table_info = dbo.generate_table(df, date=pd.to_datetime(date))
+    map_graph = dbo.make_map(df, date=pd.to_datetime(date))
+    table_info = dbo.make_table(df, date=pd.to_datetime(date))
 
     day_mask = df['date'] == pd.to_datetime(date)
     cases_total = df[day_mask]['confirmed'].sum()
@@ -195,7 +195,7 @@ def update_output(date):
     ])
 def update_output(scale, country_list):
     ts = dbo.TimeSeriesGraph(data=df, country_list=country_list, scale=scale)
-    fig = ts.generate_timeseries()
+    fig = ts.make_timeseries()
     return [fig]
 
 
