@@ -11,14 +11,13 @@ import yaml
 from pathlib import Path
 
 filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
-styles = yaml.safe_load(open(filepath))
 
 
 def make_date_picker():
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
-        max_date_allowed=dt(2020, 4, 17),
+        max_date_allowed=dt(2020, 4, 20),
         initial_visible_month=dt(2020, 3, 15),
         date=str(dt(2020, 3, 15)),
         display_format='MM/DD/YYYY',
@@ -152,7 +151,7 @@ def make_table(df=None, date=None):
     if date is not None:
         df = df[df['date'] == pd.to_datetime(date)]
     else:
-        df = df[df['date'] == pd.to_datetime('04-04-2020')]
+        df = df[df['date'] == pd.to_datetime('04-20-2020')]
 
     columns = ['country', 'confirmed', 'deaths', 'recovered']
 
@@ -218,7 +217,7 @@ def make_country_picker(dataframe=None):
                        for country in country_list]
 
     checklist = dcc.Dropdown(
-        id='country_picker_dropdown',
+        id='country_checklist',
         options=country_options,
         value=['Germany', 'France', 'Spain', 'Italy'],
         multi=True,
