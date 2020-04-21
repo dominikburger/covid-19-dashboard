@@ -5,7 +5,8 @@ import dash_core_components as dcc
 from pathlib import Path
 import pandas as pd
 import src.visualization.dashboard_objects as dbo
-import yaml
+import dash_table
+import src.visualization.styles as styles
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
@@ -21,23 +22,25 @@ def make_dataframe(path=None, days=None):
     return dataframe
 
 
-base_dir = Path().cwd()
-processed_dir = base_dir / 'data' / 'processed' / 'daily_report'
+dir_base = Path().cwd()
+dir_processed = dir_base / 'data' / 'processed' / 'daily_report'
+dir_assets = Path().cwd() / 'src' / 'visualization' / 'assets'
 
-days = pd.date_range('01/22/2020', '04/17/2020', normalize=True)
+days = pd.date_range('01/22/2020', '04/20/2020', normalize=True)
 days = days.strftime('%m-%d-%Y')
 
-filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
-styles = yaml.safe_load(open(filepath))
-
-df = make_dataframe(path=processed_dir, days=days)
-
+df = make_dataframe(path=dir_processed, days=days)
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
-app = dash.Dash('Covid-19 Dashboard', external_stylesheets=external_stylesheets)
+app = dash.Dash(
+    'Covid-19 Dashboard',
+    external_stylesheets=external_stylesheets,
+    assets_folder=dir_assets
+)
+
 app.layout = html.Div(
     id='main-window',
-    style={'backgroundColor': '#232e4a'},
+    style={'backgroundColor': '#1d2b49'},
     children=[
         # set page header
         html.H4(
@@ -50,7 +53,7 @@ app.layout = html.Div(
         # 1st row place date picker
         html.Div(
             children=dbo.make_date_picker(),
-            style=dbo.styles['date_picker_style']
+            style=styles.date_picker_style
         ),
         # 2nd row place map and country table
         html.Div(
@@ -60,111 +63,152 @@ app.layout = html.Div(
             children=[
                 html.Div(
                     id='cumulated_info',
-                    className='row',
+                    className='card',
                     children=[
                         html.Div(
                             id='caption_confirmed_cases_total',
                             children='Confirmed Cases Total',
-                            style=dbo.styles['caption_case_style']
+                            style=styles.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_cases_total',
                             children='123456',
-                            style=dbo.styles['value_case_style']
+                            style=styles.value_case_style
                         ),
                         html.Div(
                             id='caption_confirmed_deaths_total',
                             children='Deaths Total',
-                            style=dbo.styles['caption_case_style']
+                            style=styles.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_deaths_total',
                             children='123456',
-                            style=dbo.styles['value_case_style']
+                            style=styles.value_case_style
                         ),
                         html.Div(
                             id='caption_confirmed_recovered_total',
                             children='Recovered Total',
-                            style=dbo.styles['caption_case_style']
+                            style=styles.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_recovered_total',
                             children='123456',
-                            style=dbo.styles['value_case_style']
+                            style=styles.value_case_style
                         ),
                         html.Div(
                             id='caption_confirmed_active_total',
                             children='Active Total',
-                            style=dbo.styles['caption_case_style']
+                            style=styles.caption_case_style
                         ),
                         html.P(
                             id='value_confirmed_active_total',
                             children='123456',
-                            style=dbo.styles['value_case_style']
+                            style=styles.value_case_style
                         )
 
                     ],
-                    style=dbo.styles['cumulated_info_style']
+                    style=styles.cumulated_info_style
                 ),
-                # place map graph
                 html.Div(
-                    dcc.Graph(
-                        id='graph-map',
-                        figure=dbo.make_map(df)),
-                    style=dbo.styles['graph_map_style']
-                ),
-                # place country table
-                html.Div(
-                    id='table-info-div',
-                    children=dbo.make_table(df),
-                    style=dbo.styles['table_style']
+                    id='main_graph_div',
+                    style=styles.main_graph_div_style,
+                    children=[
+                        # place map graph
+                        html.Div(
+                            id='map_graph_div',
+                            children=dcc.Graph(id='map_graph'),
+                            style=styles.map_graph_style
+                        ),
+                        # place country table
+                        html.Div(
+                            id='table_info_div',
+                            children=dash_table.DataTable(),
+                            style=styles.table_style
+                        )
+                    ],
                 )
-            ],
+            ]
         ),
-        # 3rd row place toolbar
+        # 3rd row
         html.Div(
             id='third_div_row',
             className='col',
             style={'display': 'flex', 'width': '100%'},
             children=[
-                # place scale
+                # place toolbar
                 html.Div(
-                    id='scale_selector',
-                    children=dbo.make_scale(),
-                    style=dbo.styles['scale_style']
+                    id='toolbar',
+                    style=styles.toolbar_style,
+                    children=[
+                        html.Div(
+                            id='scale_selector_div',
+                            children=dbo.make_scale(),
+                            style=styles.scale_style
+                        ),
+                        # place country selector
+                        html.Div(
+                            id='country_checklist_div',
+                            children=dbo.make_country_picker(df),
+                            style=styles.country_picker_style
+                        )
+                    ]
                 ),
-                # place country selector
-                html.Div(
-                    id='country_picker',
-                    children=dbo.make_country_picker(df),
-                    style=styles['country_picker_style']
-                )
+                # info graphs
+                 html.Div(
+                     id='info_graphs_div',
+                     style=styles.info_graphs_style,
+                     children=[
+                         html.Div(
+                             style=styles.timeseries_style,
+                             children=dcc.Graph(
+                                 id='timeseries',
+                                 style={'width': '100%'},
+                                 figure=ts.make_timeseries(),
+                             ),
+                         ),
+                         html.Div(
+                             style=styles.tabs_div_style,
+                             children=[
+                                 dcc.Tabs(
+                                    id='tabs-example',
+                                    value='tab-main',
+                                    style=styles.tabs_styles,
+                                    children=[
+                                        dcc.Tab(
+                                            label='Tab one',
+                                            value='tab-1',
+                                            style=styles.tab_style,
+                                            selected_style=styles.tab_selected_style,
+                                        ),
+                                        dcc.Tab(
+                                            label='Tab two',
+                                            value='tab-2',
+                                            style=styles.tab_style,
+                                            selected_style=styles.tab_selected_style,
+                                        ),
+                                        dcc.Tab(
+                                            label='Tab three',
+                                            value='tab-3',
+                                            style=styles.tab_style,
+                                            selected_style=styles.tab_selected_style,
+                                        ),
+                                    ]
+                                 ),
+                             ]
+                         )
+                     ]
+                 )
             ]
-        ),
-        # 4th row place timeseries and case development
-        html.Div(
-            id='fourth_div_row',
-            className='row',
-            style={'display': 'inline-block', 'width': '100%'},
-            children=[
-                # place timeseries
-                html.Div(
-                    children=dcc.Graph(
-                        id='timeseries',
-                        figure=ts.make_timeseries(),
-                        style=dbo.styles['timeseries_style']
-                    ),
-                )
-            ],
         )
     ]
 )
 
 
+
 @app.callback(
     [
-        Output('graph-map', 'figure'),
-        Output('table-info-div', 'children'),
+        Output('map_graph', 'figure'),
+        Output('table_info_div', 'children'),
         Output('value_confirmed_cases_total', 'children'),
         Output('value_confirmed_deaths_total', 'children'),
         Output('value_confirmed_recovered_total', 'children'),
@@ -191,7 +235,7 @@ def update_output(date):
     [Output('timeseries', 'figure')],
     [
         Input('scale_radio', 'value'),
-        Input('country_picker_dropdown', 'value')
+        Input('country_checklist', 'value')
     ])
 def update_output(scale, country_list):
     ts = dbo.TimeSeriesGraph(data=df, country_list=country_list, scale=scale)
