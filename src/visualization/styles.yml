@@ -1,5 +1,7 @@
 cumulated_info_style:
-  backgroundColor: 'black'
+  border: '1px solid #d6d6d6'
+  border-radius: '0.25rem'
+  backgroundColor: '#235174'
   display: flex
   flex-direction: column
   flex-shrink: 0
@@ -10,7 +12,8 @@ cumulated_info_style:
   width: 15%
   alignCenter: True
 date_picker_style:
-  backgroundColor: 'black'
+  border: '1px solid #d6d6d6'
+  backgroundColor: '#235174'
   display: flex
   marginTop: 10
   marginBottom: 5
@@ -18,7 +21,8 @@ date_picker_style:
   marginRight: 5
   width: 25%
 graph_map_style:
-  backgroundColor: 'black'
+  border: '1px solid #d6d6d6'
+  backgroundColor: '#235174'
   display: flex
   flex-shrink: 0
   marginTop: 10
@@ -27,7 +31,8 @@ graph_map_style:
   marginRight: 5
   width: 50%
 table_style:
-  backgroundColor: 'black'
+  border: '1px solid #d6d6d6'
+  backgroundColor: '#235174'
   display: flex
   flex-shrink: 0
   marginTop: 10
@@ -35,20 +40,21 @@ table_style:
   marginLeft: 5
   marginRight: 5
   padding: 0
-  width: 33%
+  width: 32%
 scale_style:
-  backgroundColor: 'black'
+  border: '1px solid #d6d6d6'
+  backgroundColor: '#235174'
   color: 'white'
   display: flex
   marginTop: 5
   marginBottom: 5
   marginLeft: 5
   marginRight: 5
-  height: 36px
   width: 15%
   justify: center
 country_picker_style:
-  backgroundColor: 'black'
+  border: '1px solid #d6d6d6'
+  backgroundColor: '#235174'
   marginTop: 5
   marginBottom: 5
   marginLeft: 5
@@ -57,23 +63,36 @@ country_picker_style:
   width: 50%
   textAlign: 'left'
 timeseries_style:
-  backgroundColor: 'black'
+  border: '2px solid #d6d6d6'
+  backgroundColor: 'white'
   display: flex
   flex-shrink: 0
   marginTop: 5
   marginBottom: 10
   marginLeft: 5
   marginRight: 5
-  width: 33%
+  width: 49%
+  height: 500px
+tablist_style:
+  border: '2px solid #d6d6d6'
+  backgroundColor: 'white'
+  display: flex
+  flex-shrink: 0
+  marginTop: 5
+  marginBottom: 10
+  marginLeft: 5
+  marginRight: 5
+  width: 49%
 caption_case_style:
   display: inline-block
   color: white
   fontSize: 20
+  marginTop: 25
   textAlign: center
   width: 100%
 value_case_style:
   display: inline-block
   color: red
-  fontSize: 22
+  fontSize: 20
   textAlign: center
   width: 100%
