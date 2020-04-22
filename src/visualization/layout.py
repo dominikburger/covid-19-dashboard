@@ -203,6 +203,27 @@ app.layout = html.Div(
     ]
 )
 
+@app.callback(
+    [Output('tabs-example', 'children')],
+    [Input('country_checklist', 'value')]
+)
+def update_output(country_list):
+    tabs = []
+
+    for idx, country in enumerate(country_list):
+        fig = dbo.make_delta_graph(df, country)
+        tabs.append(
+            dcc.Tab(
+                label=country,
+                value=f'tab_{idx}',
+                children=dcc.Graph(id=f'tab_{idx}_graph', figure=fig),
+                style=styles.tab_style,
+                selected_style=styles.tab_selected_style,
+            )
+        )
+
+    return [tabs]
+
 
 @app.callback(
     [
