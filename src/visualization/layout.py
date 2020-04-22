@@ -40,13 +40,13 @@ app = dash.Dash(
 
 app.layout = html.Div(
     id='main-window',
-    style={'backgroundColor': '#1d2b49'},
+    style=styles.main_window_style,
     children=[
         # set page header
         html.H4(
             children='COVID-19 Dashboard',
             style={
-                'color': 'white',
+                'color': '#f39c12',
                 'padding': 10,
             }
         ),
@@ -123,7 +123,7 @@ app.layout = html.Div(
                         html.Div(
                             id='table_info_div',
                             children=dash_table.DataTable(),
-                            style=styles.table_style
+                            style=styles.table_info_style
                         )
                     ],
                 )
@@ -154,22 +154,22 @@ app.layout = html.Div(
                     ]
                 ),
                 # info graphs
-                 html.Div(
-                     id='info_graphs_div',
-                     style=styles.info_graphs_style,
-                     children=[
-                         html.Div(
-                             style=styles.timeseries_style,
-                             children=dcc.Graph(
-                                 id='timeseries',
-                                 style={'width': '100%'},
-                                 figure=ts.make_timeseries(),
-                             ),
-                         ),
-                         html.Div(
-                             style=styles.tabs_div_style,
-                             children=[
-                                 dcc.Tabs(
+                html.Div(
+                    id='info_graphs_div',
+                    style=styles.info_graphs_style,
+                    children=[
+                        html.Div(
+                            style=styles.timeseries_div_style,
+                            children=dcc.Graph(
+                                id='timeseries',
+                                style={'width': '100%'},
+                                figure=ts.make_timeseries(),
+                            ),
+                        ),
+                        html.Div(
+                            style=styles.tabs_div_style,
+                            children=[
+                                dcc.Tabs(
                                     id='tabs-example',
                                     value='tab-main',
                                     style=styles.tabs_styles,
@@ -193,16 +193,15 @@ app.layout = html.Div(
                                             selected_style=styles.tab_selected_style,
                                         ),
                                     ]
-                                 ),
-                             ]
-                         )
-                     ]
-                 )
+                                ),
+                            ]
+                        )
+                    ]
+                )
             ]
         )
     ]
 )
-
 
 
 @app.callback(
