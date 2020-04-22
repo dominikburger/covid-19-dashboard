@@ -5,12 +5,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 
-from dash_table.Format import Format
-
-import yaml
-from pathlib import Path
-
-filepath = Path().cwd() / 'src' / 'visualization' / 'styles.yml'
+from dash_table.Format import Format, Scheme
 
 
 def make_date_picker():
@@ -26,9 +21,16 @@ def make_date_picker():
 
 def make_map(df, date=None):
     if date is not None:
-        df_map = df[df['date'] == pd.to_datetime(date)]
+        df_map = df[df['date'] == pd.to_datetime(date)].copy()
     else:
-        df_map = df[df['date'] == pd.to_datetime('03-15-2020')]
+        df_map = df[df['date'] == pd.to_datetime('03-15-2020')].copy()
+
+    color_scale = [
+        [0, '#ffeecc'],
+        [1/3, '#ffddcc'],
+        [2/3, '#ffcccc'],
+        [1, '#ffbbcc']
+    ]
 
     choro = go.Choropleth(
         locations=df_map['country'],
@@ -36,30 +38,27 @@ def make_map(df, date=None):
         z=df_map['confirmed'],
         text=df_map['country'],
         autocolorscale=False,
-        colorscale="YlOrRd",
+        colorscale=color_scale,
         showscale=False,
     )
 
     geo_settings = {
         'resolution': 110,
-        'showcoastlines': True,
-        'coastlinecolor': 'black',
-        'showland': False,
-        'landcolor': 'LightGreen',
-        'showocean': True,
-        'oceancolor': '#bfc4dc',
-        'showlakes': False,
-        'lakecolor': "Blue",
-        'showrivers': False,
-        'rivercolor': "Blue",
-        'showframe': False,
+        'showcoastlines': True, 'coastlinecolor': 'black',
+        'showland': False, 'landcolor': 'LightGreen',
+        'showocean': True, 'oceancolor': '#aec5e0',
+        'showlakes': False, 'lakecolor': "Blue",
+        'showrivers': False, 'rivercolor': "Blue",
+        'showframe': True,
         'projection_type': 'equirectangular',
 
     }
 
     layout = {
         'geo_scope': 'world',
-        'margin': {"r": 0, "t": 0, "l": 0, "b": 0},
+        'margin': {"r": 10, "t": 0, "l": 10, "b": 0},
+        'width': 790,
+        'height': 410,
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(0,0,0,0)',
         'geo': geo_settings
@@ -78,15 +77,26 @@ class TimeSeriesGraph:
         self.scale = scale
         self.fig = go.Figure()
 
+        plot_lines = dict(
+            linecolor='lightgrey',
+            gridcolor='lightgrey',
+            zerolinecolor='lightgrey',
+        )
+
         self.fig.update_layout(
-            margin={"r": 0, "t": 0, "l": 0, "b": 0},
-            paper_bgcolor='#232e4a',
+            margin={"r": 10, "t": 10, "l": 10, "b": 10},
+            width=790,
+            height=410,
+            paper_bgcolor='#f6f6f6',
+            plot_bgcolor='#f8f8f8',
             font={
-                'family': 'sans-serif',
-                'size': 12,
-                'color': 'white',
+                'family': 'Roboto',
+                'size': 14,
+                'color': '#363636',
             },
-            legend_orientation='h'
+            legend_orientation='h',
+            xaxis=plot_lines,
+            yaxis=plot_lines
         )
 
         self._create_pivot_table()
@@ -149,46 +159,56 @@ class TimeSeriesGraph:
 
 def make_table(df=None, date=None):
     if date is not None:
-        df = df[df['date'] == pd.to_datetime(date)]
+        df_table = df[df['date'] == pd.to_datetime(date)].copy()
     else:
-        df = df[df['date'] == pd.to_datetime('04-20-2020')]
+        df_table = df[df['date'] == pd.to_datetime('04-20-2020')].copy()
 
-    columns = ['country', 'confirmed', 'deaths', 'recovered']
-
-    df = df[columns].copy()
-    df = df.sort_values(by=columns[1], ascending=False)
+    columns = ['country', 'confirmed', 'deaths', 'recovered', 'active']
+    df_table = df_table.sort_values(by=columns[1], ascending=False)
 
     table = dash_table.DataTable(
         id='table-info',
         columns=[{"name": i.capitalize(), "id": i} for i in columns],
-        data=df.to_dict('records'),
+        data=df_table.to_dict('records'),
         style_table={
-            'maxHeight': '26em',
+            'maxHeight': '55vh',
             'overflowY': 'auto',
-            'width': '40em'
-            # 'border': 'thin lightgrey solid'
+            'max_width': '100%',
+            'font-family': 'Roboto'
         },
         style_header={
-            'fontWeight': 'bold'
+            'fontSize': 16,
+            'color': '#363636',
+
         },
         style_cell={
-            'fontSize': 16,
-            'font-family': 'sans-serif',
-            'color': '#bfc4dc',
-            'backgroundColor': '#232e4a'
+            'fontSize': 14,
+            'color': '#363636',
+            'backgroundColor': '#f6f6f6',
         },
         style_cell_conditional=[
             {'if': {'column_id': 'country'},
              'width': '20%'},
             {'if': {'column_id': 'confirmed'},
+             'width': '20%',
              'type': 'numeric',
              'format': Format(group=',')
              },
             {'if': {'column_id': 'deaths'},
+             'width': '20%',
              'type': 'numeric',
              'format': Format(group=',')
-             }
-            # {'if': {'column_id': 'Region'}, 'width': '30%'},
+             },
+            {'if': {'column_id': 'recovered'},
+             'width': '20%',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'if': {'column_id': 'active'},
+             'width': '20%',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
         ],
         fixed_rows={'headers': True, 'data': 0},
         page_action='none',
@@ -207,7 +227,6 @@ def make_scale():
         ],
         value='linear',
         labelStyle={'display': 'inline-block'},
-        # style=styles['scale_style']
     )
 
 
@@ -221,6 +240,6 @@ def make_country_picker(dataframe=None):
         options=country_options,
         value=['Germany', 'France', 'Spain', 'Italy'],
         multi=True,
-        # style=styles['country_picker_style']
     )
+
     return checklist
