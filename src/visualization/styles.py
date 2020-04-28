@@ -38,6 +38,7 @@ value_case_style = {
 
 date_picker_style = {
     'backgroundColor': '',
+    'color': '#363636',
     'display': 'flex',
     'marginTop': 10,
     'marginBottom': 5,
