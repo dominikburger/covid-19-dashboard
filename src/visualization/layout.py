@@ -13,6 +13,8 @@ from datetime import timedelta
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 max_date = dt.today().date() - timedelta(days=1)
+max_date = dt(2020, 4, 27)
+
 
 def make_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
@@ -51,6 +53,8 @@ app.layout = html.Div(
                      'border': '1px solid #d6d6d6',
                      'border-radius': '0.25rem',
                      'backgroundColor': '#363636',
+                     'display': 'flex',
+                     'flex-direction': 'row',
                  },
                  children=[
                      html.H4(
@@ -58,15 +62,16 @@ app.layout = html.Div(
                          style={
                              'color': 'white',
                              'marginLeft': 10,
-                             'font-size': '3.2rem'
+                             'font-size': '3.2rem',
+                             'width': '80%'
                          }
                      ),
+                     # 1st row place date picker
+                     html.Div(
+                         children=dbo.make_date_picker(),
+                         style=styles.date_picker_style
+                     ),
                  ]
-        ),
-        # 1st row place date picker
-        html.Div(
-            children=dbo.make_date_picker(),
-            style=styles.date_picker_style
         ),
         # 2nd row place map and country table
         html.Div(
@@ -85,7 +90,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_cases_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         ),
                         html.Div(
@@ -95,7 +100,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_deaths_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         ),
                         html.Div(
@@ -105,7 +110,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_recovered_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         ),
                         html.Div(
@@ -115,7 +120,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_active_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         )
 

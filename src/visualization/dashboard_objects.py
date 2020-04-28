@@ -11,6 +11,7 @@ from dash_table.Format import Format, Scheme
 
 def make_date_picker():
     max_date = dt.today().date() - timedelta(days=1)
+    max_date = dt(2020, 4, 27)
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
@@ -351,8 +352,8 @@ def make_delta_graph(dataframe=None, country=None):
     )
 
     layout = go.Layout(
-        width=780,
-        height=380,
+        width=750,
+        height=365,
         legend_orientation='h',
         paper_bgcolor='#f6f6f6',
         plot_bgcolor='#f8f8f8',
