@@ -77,15 +77,17 @@ class TimeSeriesGraph:
         self.data = data.copy()
         self.data_pivot = None
         self.scale = scale
-        self.fig = go.Figure()
+        self.hovertemplate = \
+            '<b>Confirmed</b>: %{y:,}<br>' + \
+            '<b>Day</b>: %{x}<br>' + \
+            '<b>Date</b>: %{text|%x}'
 
-        plot_lines = dict(
+        self.plot_lines = dict(
             linecolor='lightgrey',
             gridcolor='lightgrey',
             zerolinecolor='lightgrey',
         )
-
-        self.fig.update_layout(
+        self.layout = dict(
             margin={"r": 10, "t": 10, "l": 10, "b": 10},
             width=790,
             height=410,
@@ -97,9 +99,10 @@ class TimeSeriesGraph:
                 'color': '#363636',
             },
             legend_orientation='h',
-            xaxis=plot_lines,
-            yaxis=plot_lines
+            xaxis=self.plot_lines,
+            yaxis=self.plot_lines
         )
+        self.fig = go.Figure(layout=self.layout)
 
         self._create_pivot_table()
         self._select_country(country_list)
@@ -113,7 +116,7 @@ class TimeSeriesGraph:
         if self.scale == 'linear' or self.scale is None:
             return data
         elif self.scale == 'log':
-            return np.log(data)
+            return round(np.log(data), 2)
 
     @staticmethod
     def _get_min_mask(data, factor):
@@ -142,13 +145,19 @@ class TimeSeriesGraph:
             # get disease outbreak day
             mask_min = self._get_min_mask(masked_country, 100)
             masked_country = masked_country[mask_min]
-            masked_country = masked_country.reset_index(drop=True)
-            masked_country = self._scale_values(masked_country)
+            masked_country = masked_country.reset_index()
+            masked_country.columns = masked_country.columns.droplevel(1)
+            masked_country.loc[:, 'confirmed'] = \
+                self._scale_values(masked_country['confirmed'])
 
             # create graph
             graph = go.Scatter(
                 x=masked_country.index,
-                y=masked_country,
+                y=masked_country['confirmed'],
+                text=masked_country['date'],
+                hovertemplate=self.hovertemplate,
+                hoverlabel={'align': 'left'},
+                # hoverinfo={'bgcolor': 'black'},
                 name=country,
                 mode='lines+markers'
             )
