@@ -116,7 +116,7 @@ class TimeSeriesGraph:
         if self.scale == 'linear' or self.scale is None:
             return data
         elif self.scale == 'log':
-            return np.log(data)
+            return round(np.log(data), 2)
 
     @staticmethod
     def _get_min_mask(data, factor):
