@@ -46,12 +46,22 @@ app.layout = html.Div(
     style=styles.main_window_style,
     children=[
         # set page header
-        html.H4(
-            children='COVID-19 Dashboard',
-            style={
-                'color': '#f39c12',
-                'padding': 10,
-            }
+        html.Nav(className="nav-bar",
+                 style={
+                     'border': '1px solid #d6d6d6',
+                     'border-radius': '0.25rem',
+                     'backgroundColor': '#363636',
+                 },
+                 children=[
+                     html.H4(
+                         children='COVID-19 Dashboard',
+                         style={
+                             'color': 'white',
+                             'marginLeft': 10,
+                             'font-size': '3.2rem'
+                         }
+                     ),
+                 ]
         ),
         # 1st row place date picker
         html.Div(

@@ -196,7 +196,25 @@ def make_table(df=None, date=None):
 
     table = dash_table.DataTable(
         id='table-info',
-        columns=[{"name": i.capitalize(), "id": i} for i in columns],
+        columns=[
+            {'name': 'Country', 'id': 'country'},
+            {'name': 'Confirmed', 'id': 'confirmed',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'name': 'Deaths', 'id': 'deaths',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'name': 'Recovered', 'id': 'recovered',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'name': 'Active', 'id': 'active',
+             'type': 'numeric',
+             'format': Format(group=',')
+             }
+        ],
         data=df_table.to_dict('records'),
         style_table={
             'maxHeight': '55vh',
@@ -215,28 +233,11 @@ def make_table(df=None, date=None):
             'backgroundColor': '#f6f6f6',
         },
         style_cell_conditional=[
-            {'if': {'column_id': 'country'},
-             'width': '20%'},
-            {'if': {'column_id': 'confirmed'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
-            {'if': {'column_id': 'deaths'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
-            {'if': {'column_id': 'recovered'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
-            {'if': {'column_id': 'active'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
+            {'if': {'column_id': 'country'}, 'width': '20%'},
+            {'if': {'column_id': 'confirmed'}, 'width': '20%'},
+            {'if': {'column_id': 'deaths'}, 'width': '20%'},
+            {'if': {'column_id': 'recovered'}, 'width': '20%'},
+            {'if': {'column_id': 'active'}, 'width': '20%'},
         ],
         fixed_rows={'headers': True, 'data': 0},
         page_action='none',
