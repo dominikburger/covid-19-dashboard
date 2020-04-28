@@ -22,6 +22,10 @@ def make_date_picker():
 
 
 def make_map(df, date=None):
+    hovertemplate = \
+        '<b>Confirmed</b>: %{z:,}<br>' + \
+        '%{text}<extra>%{location}</extra>'
+
     if date is not None:
         df_map = df[df['date'] == pd.to_datetime(date)].copy()
     else:
@@ -34,11 +38,24 @@ def make_map(df, date=None):
         [1, '#ffbbcc']
     ]
 
+    hover_text = [
+        '<b>Deaths</b>: {:,.0f}<br>'.format(de) + \
+        '<b>Recovered</b>: {:,.0f}<br>'.format(re) + \
+        '<b>Active</b>: {:,.0f}'.format(ac)
+        for de, re, ac in
+        zip(
+            list(df_map['deaths']),
+            list(df_map['recovered']),
+            list(df_map['active']))
+    ]
+
     choro = go.Choropleth(
         locations=df_map['country'],
         locationmode='country names',
         z=df_map['confirmed'],
-        text=df_map['country'],
+        text=hover_text,
+        hovertemplate=hovertemplate,
+        hoverinfo='none',
         autocolorscale=False,
         colorscale=color_scale,
         showscale=False,
