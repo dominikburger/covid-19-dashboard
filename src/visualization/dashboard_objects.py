@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from datetime import timedelta
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
@@ -9,10 +10,11 @@ from dash_table.Format import Format, Scheme
 
 
 def make_date_picker():
+    max_date = dt.today().date() - timedelta(days=1)
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
-        max_date_allowed=dt(2020, 4, 20),
+        max_date_allowed=max_date,
         initial_visible_month=dt(2020, 3, 15),
         date=str(dt(2020, 3, 15)),
         display_format='MM/DD/YYYY',
