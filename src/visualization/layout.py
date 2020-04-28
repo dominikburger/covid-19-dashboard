@@ -7,9 +7,12 @@ import pandas as pd
 import src.visualization.dashboard_objects as dbo
 import dash_table
 import src.visualization.styles as styles
+from datetime import datetime as dt
+from datetime import timedelta
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+max_date = dt.today().date() - timedelta(days=1)
 
 def make_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
@@ -26,7 +29,7 @@ dir_base = Path().cwd()
 dir_processed = dir_base / 'data' / 'processed' / 'daily_report'
 dir_assets = Path().cwd() / 'src' / 'visualization' / 'assets'
 
-days = pd.date_range('01/22/2020', '04/20/2020', normalize=True)
+days = pd.date_range('01/22/2020', max_date, normalize=True)
 days = days.strftime('%m-%d-%Y')
 
 df = make_dataframe(path=dir_processed, days=days)
@@ -171,24 +174,12 @@ app.layout = html.Div(
                             children=[
                                 dcc.Tabs(
                                     id='tabs-example',
-                                    value='tab-main',
+                                    value='tab_1',
                                     style=styles.tabs_styles,
                                     children=[
                                         dcc.Tab(
-                                            label='Tab one',
-                                            value='tab-1',
-                                            style=styles.tab_style,
-                                            selected_style=styles.tab_selected_style,
-                                        ),
-                                        dcc.Tab(
-                                            label='Tab two',
-                                            value='tab-2',
-                                            style=styles.tab_style,
-                                            selected_style=styles.tab_selected_style,
-                                        ),
-                                        dcc.Tab(
-                                            label='Tab three',
-                                            value='tab-3',
+                                            label='',
+                                            value='',
                                             style=styles.tab_style,
                                             selected_style=styles.tab_selected_style,
                                         ),
@@ -202,6 +193,29 @@ app.layout = html.Div(
         )
     ]
 )
+
+@app.callback(
+    [Output('tabs-example', 'children'),
+     Output('tabs-example', 'value')
+     ],
+    [Input('country_checklist', 'value')]
+)
+def update_output(country_list):
+    tabs = []
+
+    for idx, country in enumerate(country_list):
+        fig = dbo.make_delta_graph(df, country)
+        tabs.append(
+            dcc.Tab(
+                label=country,
+                value=f'tab_{idx}',
+                children=dcc.Graph(id=f'tab_{idx}_graph', figure=fig),
+                style=styles.tab_style,
+                selected_style=styles.tab_selected_style,
+            )
+        )
+
+    return tabs, 'tab_0'
 
 
 @app.callback(
