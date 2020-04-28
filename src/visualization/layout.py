@@ -232,10 +232,10 @@ def update_output(date):
     table_info = dbo.make_table(df, date=pd.to_datetime(date))
 
     day_mask = df['date'] == pd.to_datetime(date)
-    cases_total = df[day_mask]['confirmed'].sum()
-    deaths_total = df[day_mask]['deaths'].sum()
-    recovered_total = df[day_mask]['recovered'].sum()
-    active_total = df[day_mask]['active'].sum()
+    cases_total = '{:,.0f}'.format(df[day_mask]['confirmed'].sum())
+    deaths_total = '{:,.0f}'.format(df[day_mask]['deaths'].sum())
+    recovered_total = '{:,.0f}'.format(df[day_mask]['recovered'].sum())
+    active_total = '{:,.0f}'.format(df[day_mask]['active'].sum())
 
     return (
         map_graph, table_info, cases_total,
