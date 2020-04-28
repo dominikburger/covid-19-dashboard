@@ -1,4 +1,5 @@
 from datetime import datetime as dt
+from datetime import timedelta
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
@@ -9,10 +10,11 @@ from dash_table.Format import Format, Scheme
 
 
 def make_date_picker():
+    max_date = dt.today().date() - timedelta(days=1)
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
-        max_date_allowed=dt(2020, 4, 20),
+        max_date_allowed=max_date,
         initial_visible_month=dt(2020, 3, 15),
         date=str(dt(2020, 3, 15)),
         display_format='MM/DD/YYYY',
@@ -243,3 +245,95 @@ def make_country_picker(dataframe=None):
     )
 
     return checklist
+
+
+class DataLoader:
+    def __init__(self):
+        self.data = None
+        self.day_range = None
+
+    def _get_days(self, start_date, end_date):
+        days = pd.date_range(start_date, end_date)
+        self.day_range = days.strftime('%m-%d-%Y')
+
+    def load_data(self, data_path, start_date, end_date):
+        self._get_days(start_date, end_date)
+
+        self.data = pd.DataFrame()
+
+        for day in self.day_range:
+            temp_data = pd.read_csv(data_path / f'{day}.csv')
+            temp_data.loc[:, 'date'] = pd.to_datetime(day)
+            self.data = self.data.append(temp_data)
+
+
+class DataParser(DataLoader):
+
+    def __init__(self):
+        super().__init__()
+        self.country = None
+
+    def set_country(self, country=None):
+        mask_country = self.data['country'] == country
+        self.country = self.data[mask_country].copy()
+        self.country = self.country.set_index('date').sort_index()
+
+    def get_column_delta(self, column=None):
+        shift_column = self.country[column].shift(1).squeeze()
+        delta_column = self.country[column] - shift_column
+        self.country.loc[:, f'{column}_delta'] = delta_column
+
+    def get_moving_average(self, column=None, **kwargs):
+        df_ma = self.country[column].rolling(**kwargs).mean()
+        self.country.loc[:, f'{column}_moving_avg'] = df_ma
+
+
+def make_delta_graph(dataframe=None, country=None):
+    parser = DataParser()
+    parser.data = dataframe.copy()
+
+    parser.set_country(country)
+    parser.get_column_delta('confirmed')
+    parser.get_moving_average('confirmed_delta', window=3, center=True)
+
+    scatter_trace = go.Scatter(
+        name='3-day moving average',
+        x=parser.country.index,
+        y=parser.country['confirmed_delta_moving_avg'],
+        marker_color='#e14a4a',
+        hoverinfo='skip'
+    )
+
+    bar_trace = go.Bar(
+        name='actual data',
+        x=parser.country.index,
+        y=parser.country['confirmed_delta'],
+        hoverinfo='y',
+        marker=dict(
+            color='#e14a4a',
+            opacity=0.5,
+        )
+    )
+
+    traces = [scatter_trace, bar_trace]
+
+    plot_lines = dict(
+        linecolor='lightgrey',
+        gridcolor='lightgrey',
+        zerolinecolor='lightgrey',
+    )
+
+    layout = go.Layout(
+        width=780,
+        height=380,
+        legend_orientation='h',
+        paper_bgcolor='#f6f6f6',
+        plot_bgcolor='#f8f8f8',
+        margin=dict(t=10, l=5, r=5, b=5),
+        xaxis=plot_lines,
+        yaxis=plot_lines
+    )
+
+    fig = go.Figure(data=traces, layout=layout)
+
+    return fig
