@@ -166,7 +166,6 @@ app.layout = html.Div(
                             children=dcc.Graph(
                                 id='timeseries',
                                 style={'width': '100%'},
-                                figure=ts.make_timeseries(),
                             ),
                         ),
                         html.Div(
