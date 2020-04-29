@@ -359,7 +359,7 @@ def make_delta_graph(dataframe=None, country=None):
 
     layout = go.Layout(
         width=750,
-        height=365,
+        height=368,
         yaxis_title='confirmed new cases',
         font={
             'family': 'Roboto',
