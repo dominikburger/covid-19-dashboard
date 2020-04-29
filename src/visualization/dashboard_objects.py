@@ -109,14 +109,17 @@ class TimeSeriesGraph:
             margin={"r": 10, "t": 10, "l": 10, "b": 10},
             width=790,
             height=410,
+            xaxis_title='days since 100th confirmed case',
+            yaxis_title='total confirmed cases per country',
             paper_bgcolor='#f6f6f6',
             plot_bgcolor='#f8f8f8',
             font={
                 'family': 'Roboto',
-                'size': 14,
+                'size': 12,
                 'color': '#363636',
             },
             legend_orientation='h',
+            legend={'x': 0, 'y': -0.15},
             xaxis=self.plot_lines,
             yaxis=self.plot_lines
         )
@@ -324,6 +327,8 @@ def make_delta_graph(dataframe=None, country=None):
     parser.get_column_delta('confirmed')
     parser.get_moving_average('confirmed_delta', window=3, center=True)
 
+    hovertemplate = '%{y:,.0f}<extra></extra>'
+
     scatter_trace = go.Scatter(
         name='3-day moving average',
         x=parser.country.index,
@@ -336,6 +341,7 @@ def make_delta_graph(dataframe=None, country=None):
         name='actual data',
         x=parser.country.index,
         y=parser.country['confirmed_delta'],
+        hovertemplate=hovertemplate,
         hoverinfo='y',
         marker=dict(
             color='#e14a4a',
@@ -354,7 +360,14 @@ def make_delta_graph(dataframe=None, country=None):
     layout = go.Layout(
         width=750,
         height=365,
+        yaxis_title='confirmed new cases',
+        font={
+            'family': 'Roboto',
+            'size': 12,
+            'color': '#363636',
+        },
         legend_orientation='h',
+        legend={'x': 0, 'y': -0.15},
         paper_bgcolor='#f6f6f6',
         plot_bgcolor='#f8f8f8',
         margin=dict(t=10, l=5, r=5, b=5),
