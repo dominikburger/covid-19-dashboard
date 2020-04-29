@@ -6,12 +6,12 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
 
-from dash_table.Format import Format, Scheme
+from dash_table.Format import Format
 
 
 def make_date_picker():
     max_date = dt.today().date() - timedelta(days=1)
-    max_date = dt(2020, 4, 27)
+    # max_date = dt(2020, 4, 27)
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=dt(2020, 1, 22),
@@ -220,7 +220,7 @@ def make_table(df=None, date=None):
         style_table={
             'maxHeight': '55vh',
             'overflowY': 'auto',
-            'max_width': '100%',
+            'maxWidth': '100%',
             'font-family': 'Roboto'
         },
         style_header={
