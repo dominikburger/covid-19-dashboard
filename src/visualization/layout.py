@@ -13,7 +13,7 @@ from datetime import timedelta
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
 max_date = dt.today().date() - timedelta(days=1)
-max_date = dt(2020, 4, 27)
+# max_date = dt(2020, 4, 27)
 
 
 def make_dataframe(path=None, days=None):
