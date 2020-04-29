@@ -155,11 +155,11 @@ tabs_div_style = {
 }
 
 tabs_styles = {
-    'height': '35px'
+    # 'height': '35px'
+    'borderBottom': '1px solid #d6d6d6'
 }
 
 tab_style = {
-    'width': '10em',
     'borderBottom': '1px solid #d6d6d6',
     'padding': '2px',
 }
