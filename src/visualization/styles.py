@@ -81,6 +81,7 @@ table_info_style = {
     'marginLeft': 10,
     'marginRight': 10,
     'padding': 0,
+    'overflow': 'hidden',
     'width': '50%'
 }
 
