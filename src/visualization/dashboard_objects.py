@@ -1,21 +1,27 @@
 from datetime import datetime as dt
-from datetime import timedelta
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
+import src.visualization.paths as paths
 
 from dash_table.Format import Format
 
 
+def get_day_range():
+    files = paths.dir_processed.glob('*.csv')
+    dates = [dt.strptime(filename.stem, '%m-%d-%Y') for filename in files]
+
+    return min(dates), max(dates)
+
+
 def make_date_picker():
-    max_date = dt.today().date() - timedelta(days=1)
-    # max_date = dt(2020, 4, 27)
+    min_day, max_day = get_day_range()
     return dcc.DatePickerSingle(
         id='date-picker',
-        min_date_allowed=dt(2020, 1, 22),
-        max_date_allowed=max_date,
+        min_date_allowed=min_day,
+        max_date_allowed=max_day,
         initial_visible_month=dt(2020, 3, 15),
         date=str(dt(2020, 3, 15)),
         display_format='MM/DD/YYYY',
