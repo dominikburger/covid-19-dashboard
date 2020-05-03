@@ -7,13 +7,7 @@ import pandas as pd
 import src.visualization.dashboard_objects as dbo
 import dash_table
 import src.visualization.styles as styles
-from datetime import datetime as dt
-from datetime import timedelta
-
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-max_date = dt.today().date() - timedelta(days=1)
-# max_date = dt(2020, 4, 27)
+import src.visualization.paths as paths
 
 
 def make_dataframe(path=None, days=None):
@@ -27,20 +21,19 @@ def make_dataframe(path=None, days=None):
     return dataframe
 
 
-dir_base = Path().cwd()
-dir_processed = dir_base / 'data' / 'processed' / 'daily_report'
-dir_assets = Path().cwd() / 'src' / 'visualization' / 'assets'
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-days = pd.date_range('01/22/2020', max_date, normalize=True)
+min_day, max_day = dbo.get_day_range()
+days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
 
-df = make_dataframe(path=dir_processed, days=days)
+df = make_dataframe(path= paths.dir_processed, days=days)
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
 app = dash.Dash(
     'Covid-19 Dashboard',
     external_stylesheets=external_stylesheets,
-    assets_folder=dir_assets
+    assets_folder=paths.dir_assets
 )
 
 app.layout = html.Div(
