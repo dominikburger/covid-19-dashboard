@@ -12,8 +12,8 @@ cumulated_info_style = {
     'flex-direction': 'column',
     'flex-shrink': 0,
     'marginTop': 15,
-    'marginBottom': 5,
-    'marginLeft': 5,
+    'marginBottom': 10,
+    'marginLeft': 10,
     'marginRight': 10,
     'width': '15%',
     'alignCenter': True
@@ -38,12 +38,13 @@ value_case_style = {
 
 date_picker_style = {
     'backgroundColor': '',
+    'color': '#363636',
     'display': 'flex',
-    'marginTop': 10,
-    'marginBottom': 5,
-    'marginLeft': 10,
-    'marginRight': 5,
-    'width': '15%'
+    'margin': 'auto',
+    'float': 'right',
+    'width': '15%',
+    'zIndex': 99999,
+    'justifyContent': 'right'
 }
 
 main_graph_div_style = {
@@ -64,9 +65,9 @@ map_graph_style = {
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
     'marginTop': 15,
-    'marginBottom': 5,
-    'marginLeft': 5,
-    'marginRight': 5,
+    'marginBottom': 10,
+    'marginLeft': 10,
+    'marginRight': 10,
     'width': '50%'
 }
 
@@ -76,10 +77,11 @@ table_info_style = {
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
     'marginTop': 15,
-    'marginBottom': 5,
-    'marginLeft': 5,
-    'marginRight': 5,
+    'marginBottom': 10,
+    'marginLeft': 10,
+    'marginRight': 10,
     'padding': 0,
+    'overflow': 'hidden',
     'width': '50%'
 }
 
@@ -92,9 +94,9 @@ toolbar_style = {
     'width': '15%',
     'flex-direction': 'column',
     'flex-shrink': 0,
-    'marginTop': 5,
-    'marginBottom': 5,
-    'marginLeft': 5,
+    'marginTop': 10,
+    'marginBottom': 10,
+    'marginLeft': 10,
     'marginRight': 10,
 }
 
@@ -133,10 +135,10 @@ timeseries_div_style = {
     'border-radius': '0.25rem',
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
-    'marginTop': 5,
-    'marginBottom': 5,
-    'marginLeft': 5,
-    'marginRight': 5,
+    'marginTop': 10,
+    'marginBottom': 10,
+    'marginLeft': 10,
+    'marginRight': 10,
     'width': '50%',
 }
 
@@ -145,19 +147,19 @@ tabs_div_style = {
     'border-radius': '0.25rem',
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
-    'marginTop': 5,
-    'marginBottom': 5,
-    'marginLeft': 5,
-    'marginRight': 5,
+    'marginTop': 10,
+    'marginBottom': 10,
+    'marginLeft': 10,
+    'marginRight': 10,
     'width': '50%'
 }
 
 tabs_styles = {
-    'height': '35px'
+    # 'height': '35px'
+    'borderBottom': '1px solid #d6d6d6'
 }
 
 tab_style = {
-    'width': '10em',
     'borderBottom': '1px solid #d6d6d6',
     'padding': '2px',
 }
@@ -165,7 +167,8 @@ tab_style = {
 tab_selected_style = {
     'borderTop': '1px solid #d6d6d6',
     'borderBottom': '1px solid #d6d6d6',
-    'backgroundColor': '#119DFF',
+    'backgroundColor': '#119dff',
+    'background': '#363636',
     'color': 'white',
     'padding': '2px'
 }
