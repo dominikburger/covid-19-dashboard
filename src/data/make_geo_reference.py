@@ -7,7 +7,7 @@ from src import utils
 # get project top directory
 base_dir = Path(os.getcwd())
 geo_data = base_dir / 'data' / \
-           'external' / 'geo_data' / 'ne_50m_admin_0_countries.zip'
+           'external' / 'geo_data' / 'ne_110m_admin_0_countries.zip'
 geo_reference = base_dir / 'data' / \
                 'processed' / 'geo_reference' / 'country_borders.geojson'
 
