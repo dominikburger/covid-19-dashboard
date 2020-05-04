@@ -24,6 +24,7 @@ def make_date_picker():
         max_date_allowed=max_day,
         initial_visible_month=max_day,
         date=str(max_day),
+        first_day_of_week=1,
         display_format='MM/DD/YYYY',
     )
 
