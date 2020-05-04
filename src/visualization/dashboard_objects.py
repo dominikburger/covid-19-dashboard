@@ -6,7 +6,12 @@ import numpy as np
 import plotly.graph_objs as go
 import src.visualization.paths as paths
 
+import json
 from dash_table.Format import Format
+
+geo_reference = paths.dir_base / 'data' / \
+                'processed' / 'geo_reference' / 'country_borders.geojson'
+geojson = json.load(open(str(geo_reference)))
 
 
 def get_day_range():
@@ -57,16 +62,23 @@ def make_map(df, date=None):
             list(df_map['active']))
     ]
 
-    choro = go.Choropleth(
+    choro = go.Choroplethmapbox(
         locations=df_map['country'],
-        locationmode='country names',
         z=df_map['confirmed'],
         text=hover_text,
         hovertemplate=hovertemplate,
+        featureidkey='properties.NAME',
         hoverinfo='none',
+        geojson=geojson,
         autocolorscale=False,
         colorscale=color_scale,
+        # colorbar={
+        #     'thickness': 15,
+        #     'bgcolor': '#f6f6f6',
+        #     'x': 1
+        # },
         showscale=False,
+        marker={'opacity': 0.6}
     )
 
     geo_settings = {
@@ -81,13 +93,12 @@ def make_map(df, date=None):
     }
 
     layout = {
-        'geo_scope': 'world',
-        'margin': {"r": 10, "t": 0, "l": 10, "b": 0},
+        'mapbox_style': "carto-positron",
+        'margin': {"r": 0, "t": 0, "l": 0, "b": 0},
         'width': 790,
         'height': 410,
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(0,0,0,0)',
-        'geo': geo_settings,
     }
 
     fig = go.Figure(data=choro, layout=layout)
