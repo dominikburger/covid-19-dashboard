@@ -22,8 +22,8 @@ def make_date_picker():
         id='date-picker',
         min_date_allowed=min_day,
         max_date_allowed=max_day,
-        initial_visible_month=dt(2020, 3, 15),
-        date=str(dt(2020, 3, 15)),
+        initial_visible_month=max_day,
+        date=str(max_day),
         display_format='MM/DD/YYYY',
     )
 
@@ -77,7 +77,6 @@ def make_map(df, date=None):
         'showrivers': False, 'rivercolor': "Blue",
         'showframe': True,
         'projection_type': 'equirectangular',
-
     }
 
     layout = {
@@ -87,7 +86,7 @@ def make_map(df, date=None):
         'height': 410,
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(0,0,0,0)',
-        'geo': geo_settings
+        'geo': geo_settings,
     }
 
     fig = go.Figure(data=choro, layout=layout)
