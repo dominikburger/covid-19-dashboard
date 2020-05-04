@@ -81,17 +81,6 @@ def make_map(df, date=None):
         marker={'opacity': 0.6}
     )
 
-    geo_settings = {
-        'resolution': 110,
-        'showcoastlines': True, 'coastlinecolor': 'black',
-        'showland': False, 'landcolor': 'LightGreen',
-        'showocean': True, 'oceancolor': '#aec5e0',
-        'showlakes': False, 'lakecolor': "Blue",
-        'showrivers': False, 'rivercolor': "Blue",
-        'showframe': True,
-        'projection_type': 'equirectangular',
-    }
-
     layout = {
         'mapbox_style': "carto-positron",
         'margin': {"r": 0, "t": 0, "l": 0, "b": 0},
