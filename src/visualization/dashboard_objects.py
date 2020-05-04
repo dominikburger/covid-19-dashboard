@@ -1,27 +1,39 @@
 from datetime import datetime as dt
-from datetime import timedelta
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
+import src.visualization.paths as paths
 
-from dash_table.Format import Format, Scheme
+from dash_table.Format import Format
+
+
+def get_day_range():
+    files = paths.dir_processed.glob('*.csv')
+    dates = [dt.strptime(filename.stem, '%m-%d-%Y') for filename in files]
+
+    return min(dates), max(dates)
 
 
 def make_date_picker():
-    max_date = dt.today().date() - timedelta(days=1)
+    min_day, max_day = get_day_range()
     return dcc.DatePickerSingle(
         id='date-picker',
-        min_date_allowed=dt(2020, 1, 22),
-        max_date_allowed=max_date,
-        initial_visible_month=dt(2020, 3, 15),
-        date=str(dt(2020, 3, 15)),
+        min_date_allowed=min_day,
+        max_date_allowed=max_day,
+        initial_visible_month=max_day,
+        date=str(max_day),
+        first_day_of_week=1,
         display_format='MM/DD/YYYY',
     )
 
 
 def make_map(df, date=None):
+    hovertemplate = \
+        '<b>Confirmed</b>: %{z:,}<br>' + \
+        '%{text}<extra>%{location}</extra>'
+
     if date is not None:
         df_map = df[df['date'] == pd.to_datetime(date)].copy()
     else:
@@ -34,11 +46,24 @@ def make_map(df, date=None):
         [1, '#ffbbcc']
     ]
 
+    hover_text = [
+        '<b>Deaths</b>: {:,.0f}<br>'.format(de) + \
+        '<b>Recovered</b>: {:,.0f}<br>'.format(re) + \
+        '<b>Active</b>: {:,.0f}'.format(ac)
+        for de, re, ac in
+        zip(
+            list(df_map['deaths']),
+            list(df_map['recovered']),
+            list(df_map['active']))
+    ]
+
     choro = go.Choropleth(
         locations=df_map['country'],
         locationmode='country names',
         z=df_map['confirmed'],
-        text=df_map['country'],
+        text=hover_text,
+        hovertemplate=hovertemplate,
+        hoverinfo='none',
         autocolorscale=False,
         colorscale=color_scale,
         showscale=False,
@@ -53,7 +78,6 @@ def make_map(df, date=None):
         'showrivers': False, 'rivercolor': "Blue",
         'showframe': True,
         'projection_type': 'equirectangular',
-
     }
 
     layout = {
@@ -63,7 +87,7 @@ def make_map(df, date=None):
         'height': 410,
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(0,0,0,0)',
-        'geo': geo_settings
+        'geo': geo_settings,
     }
 
     fig = go.Figure(data=choro, layout=layout)
@@ -91,14 +115,17 @@ class TimeSeriesGraph:
             margin={"r": 10, "t": 10, "l": 10, "b": 10},
             width=790,
             height=410,
+            xaxis_title='days since 100th confirmed case',
+            yaxis_title='total confirmed cases per country',
             paper_bgcolor='#f6f6f6',
             plot_bgcolor='#f8f8f8',
             font={
                 'family': 'Roboto',
-                'size': 14,
+                'size': 12,
                 'color': '#363636',
             },
             legend_orientation='h',
+            legend={'x': 0, 'y': -0.15},
             xaxis=self.plot_lines,
             yaxis=self.plot_lines
         )
@@ -179,12 +206,30 @@ def make_table(df=None, date=None):
 
     table = dash_table.DataTable(
         id='table-info',
-        columns=[{"name": i.capitalize(), "id": i} for i in columns],
+        columns=[
+            {'name': 'Country', 'id': 'country'},
+            {'name': 'Confirmed', 'id': 'confirmed',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'name': 'Deaths', 'id': 'deaths',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'name': 'Recovered', 'id': 'recovered',
+             'type': 'numeric',
+             'format': Format(group=',')
+             },
+            {'name': 'Active', 'id': 'active',
+             'type': 'numeric',
+             'format': Format(group=',')
+             }
+        ],
         data=df_table.to_dict('records'),
         style_table={
             'maxHeight': '55vh',
             'overflowY': 'auto',
-            'max_width': '100%',
+            'maxWidth': '100%',
             'font-family': 'Roboto'
         },
         style_header={
@@ -198,28 +243,11 @@ def make_table(df=None, date=None):
             'backgroundColor': '#f6f6f6',
         },
         style_cell_conditional=[
-            {'if': {'column_id': 'country'},
-             'width': '20%'},
-            {'if': {'column_id': 'confirmed'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
-            {'if': {'column_id': 'deaths'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
-            {'if': {'column_id': 'recovered'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
-            {'if': {'column_id': 'active'},
-             'width': '20%',
-             'type': 'numeric',
-             'format': Format(group=',')
-             },
+            {'if': {'column_id': 'country'}, 'width': '20%'},
+            {'if': {'column_id': 'confirmed'}, 'width': '20%'},
+            {'if': {'column_id': 'deaths'}, 'width': '20%'},
+            {'if': {'column_id': 'recovered'}, 'width': '20%'},
+            {'if': {'column_id': 'active'}, 'width': '20%'},
         ],
         fixed_rows={'headers': True, 'data': 0},
         page_action='none',
@@ -305,6 +333,8 @@ def make_delta_graph(dataframe=None, country=None):
     parser.get_column_delta('confirmed')
     parser.get_moving_average('confirmed_delta', window=3, center=True)
 
+    hovertemplate = '%{y:,.0f}<extra></extra>'
+
     scatter_trace = go.Scatter(
         name='3-day moving average',
         x=parser.country.index,
@@ -317,6 +347,7 @@ def make_delta_graph(dataframe=None, country=None):
         name='actual data',
         x=parser.country.index,
         y=parser.country['confirmed_delta'],
+        hovertemplate=hovertemplate,
         hoverinfo='y',
         marker=dict(
             color='#e14a4a',
@@ -333,9 +364,16 @@ def make_delta_graph(dataframe=None, country=None):
     )
 
     layout = go.Layout(
-        width=780,
-        height=380,
+        width=750,
+        height=368,
+        yaxis_title='confirmed new cases',
+        font={
+            'family': 'Roboto',
+            'size': 12,
+            'color': '#363636',
+        },
         legend_orientation='h',
+        legend={'x': 0, 'y': -0.15},
         paper_bgcolor='#f6f6f6',
         plot_bgcolor='#f8f8f8',
         margin=dict(t=10, l=5, r=5, b=5),

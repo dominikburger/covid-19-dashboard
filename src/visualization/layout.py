@@ -7,12 +7,8 @@ import pandas as pd
 import src.visualization.dashboard_objects as dbo
 import dash_table
 import src.visualization.styles as styles
-from datetime import datetime as dt
-from datetime import timedelta
+import src.visualization.paths as paths
 
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
-
-max_date = dt.today().date() - timedelta(days=1)
 
 def make_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
@@ -25,20 +21,19 @@ def make_dataframe(path=None, days=None):
     return dataframe
 
 
-dir_base = Path().cwd()
-dir_processed = dir_base / 'data' / 'processed' / 'daily_report'
-dir_assets = Path().cwd() / 'src' / 'visualization' / 'assets'
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-days = pd.date_range('01/22/2020', max_date, normalize=True)
+min_day, max_day = dbo.get_day_range()
+days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
 
-df = make_dataframe(path=dir_processed, days=days)
+df = make_dataframe(path= paths.dir_processed, days=days)
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
 app = dash.Dash(
     'Covid-19 Dashboard',
     external_stylesheets=external_stylesheets,
-    assets_folder=dir_assets
+    assets_folder=paths.dir_assets
 )
 
 app.layout = html.Div(
@@ -46,17 +41,30 @@ app.layout = html.Div(
     style=styles.main_window_style,
     children=[
         # set page header
-        html.H4(
-            children='COVID-19 Dashboard',
-            style={
-                'color': '#f39c12',
-                'padding': 10,
-            }
-        ),
-        # 1st row place date picker
-        html.Div(
-            children=dbo.make_date_picker(),
-            style=styles.date_picker_style
+        html.Nav(className="nav-bar",
+                 style={
+                     'border': '1px solid #d6d6d6',
+                     'border-radius': '0.25rem',
+                     'backgroundColor': '#363636',
+                     'display': 'flex',
+                     'flex-direction': 'row',
+                 },
+                 children=[
+                     html.H4(
+                         children='COVID-19 Dashboard',
+                         style={
+                             'color': 'white',
+                             'marginLeft': 10,
+                             'font-size': '3.2rem',
+                             'width': '80%'
+                         }
+                     ),
+                     # 1st row place date picker
+                     html.Div(
+                         children=dbo.make_date_picker(),
+                         style=styles.date_picker_style
+                     ),
+                 ]
         ),
         # 2nd row place map and country table
         html.Div(
@@ -75,7 +83,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_cases_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         ),
                         html.Div(
@@ -85,7 +93,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_deaths_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         ),
                         html.Div(
@@ -95,7 +103,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_recovered_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         ),
                         html.Div(
@@ -105,7 +113,7 @@ app.layout = html.Div(
                         ),
                         html.P(
                             id='value_confirmed_active_total',
-                            children='123456',
+                            children='',
                             style=styles.value_case_style
                         )
 
@@ -232,10 +240,10 @@ def update_output(date):
     table_info = dbo.make_table(df, date=pd.to_datetime(date))
 
     day_mask = df['date'] == pd.to_datetime(date)
-    cases_total = df[day_mask]['confirmed'].sum()
-    deaths_total = df[day_mask]['deaths'].sum()
-    recovered_total = df[day_mask]['recovered'].sum()
-    active_total = df[day_mask]['active'].sum()
+    cases_total = '{:,.0f}'.format(df[day_mask]['confirmed'].sum())
+    deaths_total = '{:,.0f}'.format(df[day_mask]['deaths'].sum())
+    recovered_total = '{:,.0f}'.format(df[day_mask]['recovered'].sum())
+    active_total = '{:,.0f}'.format(df[day_mask]['active'].sum())
 
     return (
         map_graph, table_info, cases_total,
