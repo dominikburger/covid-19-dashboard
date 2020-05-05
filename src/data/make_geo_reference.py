@@ -29,7 +29,12 @@ country_rename_dict = {
             'Dem. Rep. Congo': 'Congo (Kinshasa)',
             'Bosnia and Herz.': 'Bosnia and Herzegovina',
             'Macedonia': 'North Macedonia',
-            'Central African Rep.': 'Central African Republic'
+            'Central African Rep.': 'Central African Republic',
+            'W. Sahara': 'Western Sahara',
+            'Dominican Rep.': 'Dominican Republic',
+            'Eq. Guinea': 'Equatorial Guinea',
+            'eSwatini': 'Eswatini',
+            'Timor-Leste': 'East Timor'
         }
     }
 
