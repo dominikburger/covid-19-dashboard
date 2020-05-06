@@ -5,9 +5,12 @@ import pandas as pd
 import geopandas as gpd
 import numpy as np
 
+import sys
 import os
+sys.path.append(os.getcwd())
+
 from pathlib import Path
-from src import utils
+import src.utils as utils
 # from dotenv import find_dotenv, load_dotenv
 
 # get project top directory
