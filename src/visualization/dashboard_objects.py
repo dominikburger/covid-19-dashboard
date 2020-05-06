@@ -1,10 +1,10 @@
-from datetime import datetime as dt
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-import src.visualization.paths as paths
+import src.paths as paths
+import src.utils as utils
 
 import json
 from dash_table.Format import Format
@@ -14,15 +14,8 @@ geo_reference = paths.dir_base / 'data' / \
 geojson = json.load(open(str(geo_reference)))
 
 
-def get_day_range():
-    files = paths.dir_processed.glob('*.csv')
-    dates = [dt.strptime(filename.stem, '%m-%d-%Y') for filename in files]
-
-    return min(dates), max(dates)
-
-
 def make_date_picker():
-    min_day, max_day = get_day_range()
+    min_day, max_day = utils.get_day_range()
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=min_day,
