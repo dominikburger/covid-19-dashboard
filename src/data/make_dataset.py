@@ -5,9 +5,12 @@ import pandas as pd
 import geopandas as gpd
 import numpy as np
 
+import sys
 import os
-from pathlib import Path
+sys.path.append(os.getcwd())
 
+from pathlib import Path
+import src.utils as utils
 # from dotenv import find_dotenv, load_dotenv
 
 # get project top directory
@@ -22,11 +25,6 @@ def get_output_path(input_path=None, output_folder=None, suffix='.csv'):
     output_file = f'{Path(input_path).stem}{suffix}'
     output_path = output_folder / output_file
     return output_path
-
-
-def check_folder(path):
-    path = path.parents[0]
-    path.mkdir(parents=True, exist_ok=True)
 
 
 column_schema = {
@@ -96,13 +94,13 @@ country_rename_dict = {
         'MS Zaandam': 'Others',
         'Reunion': 'France',
         'Channel Islands': 'United Kingdom',
-        'Czechia': 'Czech Republic',
         'Mainland China': 'China',
         'Macao': 'Macau',
         'Gambia, The': 'The Gambia',
         'Cape Verde': 'Cabo Verde',
         'Timor-Leste': 'East Timor',
-        'St. Martin': 'Saint Martin'
+        'St. Martin': 'Saint Martin',
+        'Burma': 'Myanmar'
     }
 }
 
@@ -138,7 +136,7 @@ def main():
             output_folder=processed_daily_dir
         )
         # dir exists check, overwriting in all cases
-        check_folder(output_file)
+        utils.check_folder_exists(output_file)
 
         logger.info(f'writing daily report: {output_file}')
         df.to_csv(output_file)
