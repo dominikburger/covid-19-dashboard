@@ -2,12 +2,12 @@ import dash
 from dash.dependencies import Input, Output
 import dash_html_components as html
 import dash_core_components as dcc
-from pathlib import Path
 import pandas as pd
 import src.visualization.dashboard_objects as dbo
 import dash_table
 import src.visualization.styles as styles
-import src.visualization.paths as paths
+import src.paths as paths
+import src.utils as utils
 
 
 def make_dataframe(path=None, days=None):
@@ -23,11 +23,11 @@ def make_dataframe(path=None, days=None):
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-min_day, max_day = dbo.get_day_range()
+min_day, max_day = utils.get_day_range()
 days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
 
-df = make_dataframe(path= paths.dir_processed, days=days)
+df = make_dataframe(path=paths.dir_processed, days=days)
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
 app = dash.Dash(
