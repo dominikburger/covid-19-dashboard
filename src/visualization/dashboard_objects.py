@@ -1,23 +1,21 @@
-from datetime import datetime as dt
 import dash_core_components as dcc
 import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-import src.visualization.paths as paths
+import src.paths as paths
+import src.utils as utils
 
+import json
 from dash_table.Format import Format
 
-
-def get_day_range():
-    files = paths.dir_processed.glob('*.csv')
-    dates = [dt.strptime(filename.stem, '%m-%d-%Y') for filename in files]
-
-    return min(dates), max(dates)
+geo_reference = paths.dir_base / 'data' / \
+                'processed' / 'geo_reference' / 'country_borders.geojson'
+geojson = json.load(open(str(geo_reference)))
 
 
 def make_date_picker():
-    min_day, max_day = get_day_range()
+    min_day, max_day = utils.get_day_range()
     return dcc.DatePickerSingle(
         id='date-picker',
         min_date_allowed=min_day,
@@ -57,37 +55,32 @@ def make_map(df, date=None):
             list(df_map['active']))
     ]
 
-    choro = go.Choropleth(
+    choro = go.Choroplethmapbox(
         locations=df_map['country'],
-        locationmode='country names',
         z=df_map['confirmed'],
         text=hover_text,
         hovertemplate=hovertemplate,
+        featureidkey='properties.country',
         hoverinfo='none',
+        geojson=geojson,
         autocolorscale=False,
         colorscale=color_scale,
+        # colorbar={
+        #     'thickness': 15,
+        #     'bgcolor': '#f6f6f6',
+        #     'x': 1
+        # },
         showscale=False,
+        marker={'opacity': 0.6}
     )
 
-    geo_settings = {
-        'resolution': 110,
-        'showcoastlines': True, 'coastlinecolor': 'black',
-        'showland': False, 'landcolor': 'LightGreen',
-        'showocean': True, 'oceancolor': '#aec5e0',
-        'showlakes': False, 'lakecolor': "Blue",
-        'showrivers': False, 'rivercolor': "Blue",
-        'showframe': True,
-        'projection_type': 'equirectangular',
-    }
-
     layout = {
-        'geo_scope': 'world',
-        'margin': {"r": 10, "t": 0, "l": 10, "b": 0},
+        'mapbox_style': "carto-positron",
+        'margin': {"r": 0, "t": 0, "l": 0, "b": 0},
         'width': 790,
         'height': 410,
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(0,0,0,0)',
-        'geo': geo_settings,
     }
 
     fig = go.Figure(data=choro, layout=layout)
