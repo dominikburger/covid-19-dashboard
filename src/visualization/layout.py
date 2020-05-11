@@ -8,7 +8,7 @@ import dash_table
 import src.visualization.styles as styles
 import src.paths as paths
 import src.utils as utils
-
+import os
 
 def make_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
@@ -264,4 +264,4 @@ def update_output(scale, country_list):
 
 
 if __name__ == '__main__':
-    app.run_server(debug=True)
+    app.run_server(host='0.0.0.0', debug=True)
