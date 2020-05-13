@@ -23,6 +23,7 @@ def make_dataframe(path=None, days=None):
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
+# utils.parse_covid_data()
 min_day, max_day = utils.get_day_range()
 days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
