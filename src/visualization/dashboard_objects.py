@@ -3,41 +3,8 @@ import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-import src.paths as paths
 import src.utils as utils
-import os
-import json
 from dash_table.Format import Format
-from pathlib import Path
-
-file_geo_reference = paths.dir_base / 'data' / \
-                'processed' / 'geo_reference' / 'country_borders.geojson'
-
-if file_geo_reference.is_file():
-    print("geo reference exists")
-else:
-    print("geo reference does not exist, downloading...")
-    os.system('python3 src/data/download_geo_data.py')
-    print("Creating geo reference...")
-    os.system('python3 src/data/make_geo_reference.py')
-
-geojson = json.load(open(str(file_geo_reference)))
-
-dir_covid_data = paths.dir_base / 'data' / 'processed' / 'daily_report'
-dir_covid_data.mkdir(parents=True, exist_ok=True)
-
-is_empty = not(any(dir_covid_data.iterdir()))
-
-if is_empty:
-    print("covid data does not exist, downloading...")
-    os.system('python3 src/data/download_covid_data.py')
-    print("preparing cleaned dataset...")
-    os.system('python3 src/data/make_dataset.py')
-else:
-    print("updating covid data...")
-    os.system('python3 src/data/update_covid_data.py')
-    print("preparing cleaned dataset...")
-    os.system('python3 src/data/make_dataset.py')
 
 
 def make_date_picker():
@@ -88,7 +55,7 @@ def make_map(df, date=None):
         hovertemplate=hovertemplate,
         featureidkey='properties.country',
         hoverinfo='none',
-        geojson=geojson,
+        geojson=utils.load_geo_reference(),
         autocolorscale=False,
         colorscale=color_scale,
         # colorbar={
