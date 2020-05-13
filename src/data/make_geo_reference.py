@@ -3,13 +3,9 @@ import os
 
 from pathlib import Path
 from src import utils
+from src import paths
 
 # get project top directory
-base_dir = Path(os.getcwd())
-geo_data = base_dir / 'data' / \
-           'external' / 'geo_data' / 'ne_110m_admin_0_countries.zip'
-geo_reference = base_dir / 'data' / \
-                'processed' / 'geo_reference' / 'country_borders.geojson'
 
 country_rename_dict = {
         'country': {
@@ -41,7 +37,7 @@ country_rename_dict = {
 
 def main():
     # load geodataframe
-    gdf = gpd.read_file(f'zip://{geo_data}', crs='EPSG:4326')
+    gdf = gpd.read_file(f'zip://{paths.file_geo_data}', crs='EPSG:4326')
 
     # subset dataframe to relevant columns
     COLUMNS = ['NAME', 'geometry']
@@ -50,9 +46,9 @@ def main():
     gdf_clean = gdf_clean.replace(country_rename_dict)
 
     # dir exists check, overwriting in all cases
-    utils.check_folder_exists(geo_reference)
+    utils.check_folder_exists(paths.dir_processed_geo_reference)
 
-    gdf_clean.to_file(geo_reference, driver='GeoJSON')
+    gdf_clean.to_file(paths.dir_processed_geo_reference, driver='GeoJSON')
 
 
 if __name__ == '__main__':

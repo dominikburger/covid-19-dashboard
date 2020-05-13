@@ -1,12 +1,9 @@
 import os
-from pathlib import Path
+from src import paths
 
 
 def main():
-    project_dir = Path(__file__).resolve().parents[2]
-    dir_csse = project_dir / './data/external/csse_data'
-
-    os.chdir(dir_csse)
+    os.chdir(f'{paths.dir_csse_data}')
     os.system('git fetch && git pull')
 
 
