@@ -28,7 +28,7 @@ min_day, max_day = utils.get_day_range()
 days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
 
-df = make_dataframe(path=paths.dir_processed, days=days)
+df = make_dataframe(path=paths.dir_processed_daily, days=days)
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
 app = dash.Dash(
