@@ -15,9 +15,9 @@ import src.utils as utils
 
 # get project top directory
 project_dir = Path(__file__).resolve().parents[2]
-csse_data = project_dir / 'data/external/csse_data/csse_covid_19_data'
-daily_data = csse_data / 'csse_covid_19_daily_reports/'
-ts_data = csse_data / 'csse_covid_19_time_series'
+covid_data = project_dir / 'data/external/csse_data/csse_covid_19_data'
+daily_data = covid_data / 'csse_covid_19_daily_reports/'
+ts_data = covid_data / 'csse_covid_19_time_series'
 processed_daily_dir = project_dir / 'data' / 'processed' / 'daily_report'
 
 
@@ -151,3 +151,4 @@ if __name__ == '__main__':
     # load_dotenv(find_dotenv())
 
     main()
+    os.system('rm -rf data/external/csse_data')
