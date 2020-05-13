@@ -57,3 +57,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+    os.system('rm -rf data/external/geo_data/')
