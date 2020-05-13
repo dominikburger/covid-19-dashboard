@@ -3,15 +3,8 @@ import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-import src.paths as paths
 import src.utils as utils
-
-import json
 from dash_table.Format import Format
-
-geo_reference = paths.dir_base / 'data' / \
-                'processed' / 'geo_reference' / 'country_borders.geojson'
-geojson = json.load(open(str(geo_reference)))
 
 
 def make_date_picker():
@@ -62,7 +55,7 @@ def make_map(df, date=None):
         hovertemplate=hovertemplate,
         featureidkey='properties.country',
         hoverinfo='none',
-        geojson=geojson,
+        geojson=utils.load_geo_reference(),
         autocolorscale=False,
         colorscale=color_scale,
         # colorbar={
