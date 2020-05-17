@@ -10,6 +10,7 @@ import src.paths as paths
 import src.utils as utils
 import os
 
+
 def make_dataframe(path=None, days=None):
     dataframe = pd.DataFrame()
 
@@ -23,7 +24,7 @@ def make_dataframe(path=None, days=None):
 
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-# utils.parse_covid_data()
+utils.parse_covid_data()
 min_day, max_day = utils.get_day_range()
 days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
@@ -265,4 +266,4 @@ def update_output(scale, country_list):
 
 
 if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', debug=True)
+    app.run_server(host='0.0.0.0', debug=False)
