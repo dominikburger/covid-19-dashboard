@@ -31,16 +31,19 @@ def load_geo_reference():
 
 
 def parse_covid_data():
+    paths.dir_csse_data.mkdir(parents=True, exist_ok=True)
     paths.dir_processed_daily.mkdir(parents=True, exist_ok=True)
+    external_empty = not(any(paths.dir_csse_data.iterdir()))
 
-    is_empty = not(any(paths.dir_processed_daily.iterdir()))
-    if is_empty:
-        print("covid data does not exist, downloading...")
+    if not external_empty:
+        print("updating covid data...")
+        # 'update_covid_data.py' uses git, the svn variant is prefered
+        # os.system('python3 src/data/update_covid_data.py')
         os.system('python3 src/data/download_covid_data.py')
         print("preparing cleaned dataset...")
         os.system('python3 src/data/make_dataset.py')
     else:
-        print("updating covid data...")
-        os.system('python3 src/data/update_covid_data.py')
+        print("covid data does not exist, downloading...")
+        os.system('python3 src/data/download_covid_data.py')
         print("preparing cleaned dataset...")
         os.system('python3 src/data/make_dataset.py')
