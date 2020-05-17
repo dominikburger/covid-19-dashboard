@@ -10,17 +10,14 @@ def check_folder_exists(path):
 
 
 def get_day_range():
-    files = paths.dir_processed.glob('*.csv')
+    files = paths.dir_processed_daily.glob('*.csv')
     dates = [dt.strptime(filename.stem, '%m-%d-%Y') for filename in files]
 
     return min(dates), max(dates)
 
 
 def parse_geo_reference():
-    file_geo_reference = paths.dir_base / 'data' / \
-                    'processed' / 'geo_reference' / 'country_borders.geojson'
-
-    if file_geo_reference.is_file():
+    if paths.file_geo_reference.is_file():
         print("geo reference exists")
     else:
         print("geo reference does not exist, downloading...")
@@ -30,24 +27,21 @@ def parse_geo_reference():
 
 
 def load_geo_reference():
-    file_geo_reference = paths.dir_base / 'data' / \
-                    'processed' / 'geo_reference' / 'country_borders.geojson'
-    return json.load(open(str(file_geo_reference)))
+    return json.load(open(str(paths.file_geo_reference)))
 
 
 def parse_covid_data():
-    dir_covid_data = paths.dir_base / 'data' / 'processed' / 'daily_report'
-    dir_covid_data.mkdir(parents=True, exist_ok=True)
+    paths.dir_csse_data.mkdir(parents=True, exist_ok=True)
+    paths.dir_processed_daily.mkdir(parents=True, exist_ok=True)
+    external_empty = not(any(paths.dir_csse_data.iterdir()))
 
-    is_empty = not(any(dir_covid_data.iterdir()))
-
-    if is_empty:
-        print("covid data does not exist, downloading...")
-        os.system('python3 src/data/download_covid_data.py')
+    if not external_empty:
+        print("updating covid data...")
+        os.system('python3 src/data/update_covid_data.py')
         print("preparing cleaned dataset...")
         os.system('python3 src/data/make_dataset.py')
     else:
-        print("updating covid data...")
-        os.system('python3 src/data/update_covid_data.py')
+        print("covid data does not exist, downloading...")
+        os.system('python3 src/data/download_covid_data.py')
         print("preparing cleaned dataset...")
         os.system('python3 src/data/make_dataset.py')

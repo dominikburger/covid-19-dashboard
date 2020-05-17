@@ -7,18 +7,11 @@ import numpy as np
 
 import sys
 import os
-sys.path.append(os.getcwd())
 
 from pathlib import Path
-import src.utils as utils
+from src import utils
+from src import paths
 # from dotenv import find_dotenv, load_dotenv
-
-# get project top directory
-project_dir = Path(__file__).resolve().parents[2]
-covid_data = project_dir / 'data/external/csse_data/csse_covid_19_data'
-daily_data = covid_data / 'csse_covid_19_daily_reports/'
-ts_data = covid_data / 'csse_covid_19_time_series'
-processed_daily_dir = project_dir / 'data' / 'processed' / 'daily_report'
 
 
 def get_output_path(input_path=None, output_folder=None, suffix='.csv'):
@@ -113,7 +106,7 @@ def main():
     logger.info('preparing daily reports')
 
     # get all raw daily reports
-    path_list = sorted([path for path in daily_data.glob('*.csv')])
+    path_list = sorted([path for path in paths.dir_daily_data.glob('*.csv')])
     for input_path in path_list:
         # read data
         df = pd.read_csv(input_path)
@@ -133,7 +126,7 @@ def main():
 
         output_file = get_output_path(
             input_path=input_path,
-            output_folder=processed_daily_dir
+            output_folder=paths.dir_processed_daily
         )
         # dir exists check, overwriting in all cases
         utils.check_folder_exists(output_file)
@@ -151,4 +144,3 @@ if __name__ == '__main__':
     # load_dotenv(find_dotenv())
 
     main()
-    os.system('rm -rf data/external/csse_data')
