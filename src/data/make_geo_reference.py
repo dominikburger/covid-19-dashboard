@@ -1,11 +1,8 @@
 import geopandas as gpd
 import os
-
-from pathlib import Path
 from src import utils
 from src import paths
 
-# get project top directory
 
 country_rename_dict = {
         'country': {
@@ -53,4 +50,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-    os.system('rm -rf data/external/geo_data/')

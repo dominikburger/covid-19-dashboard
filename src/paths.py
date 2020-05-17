@@ -1,5 +1,7 @@
 from pathlib import Path
 
+
+# directories
 dir_project = Path().cwd()
 dir_data_external = dir_project / 'data' / 'external'
 dir_csse_data = dir_data_external / 'csse_data'
@@ -12,6 +14,7 @@ dir_processed_daily = dir_processed / 'daily_report'
 dir_processed_geo_reference = dir_processed / 'geo_reference'
 dir_assets = dir_project / 'src' / 'visualization' / 'assets'
 
-
+# files
 file_geo_data = dir_geo_data / 'ne_110m_admin_0_countries.zip'
 file_geo_reference = dir_processed_geo_reference / 'country_borders.geojson'
+dir_custom_css = dir_assets / 'custom.css'

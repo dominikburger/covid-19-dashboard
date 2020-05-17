@@ -9,7 +9,6 @@ URL_COVID_DATA_SVN = 'https://github.com/CSSEGISandData/COVID-19' \
 
 def main(vcs):
     if vcs == 'git':
-        os.system(f'rm -rf {paths.dir_csse_data}')
         os.system(f'git clone {URL_COVID_DATA_GIT} {paths.dir_csse_data}')
     elif vcs == 'svn':
         os.system(f'svn export --force {URL_COVID_DATA_SVN} '
@@ -19,8 +18,9 @@ def main(vcs):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument(
-        'vcs',
-        default='git',
+        '-vcs',
+        choices=['git', 'svn'],
+        default='svn',
         type=str,
         help='Specifies the utilized version control system'
     )
