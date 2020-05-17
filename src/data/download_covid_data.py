@@ -1,29 +1,25 @@
 import os
 import argparse
+from src import paths
 
 URL_COVID_DATA_GIT = 'https://github.com/CSSEGISandData/COVID-19'
 URL_COVID_DATA_SVN = 'https://github.com/CSSEGISandData/COVID-19' \
                      '/trunk/csse_covid_19_data/csse_covid_19_daily_reports'
-OUTPUT_FOLDER = 'data/external/csse_data/' \
-                'csse_covid_19_data/csse_covid_19_daily_reports/'
+
+DIR_COVID_DOWNLOAD = 'csse_covid_19_data/csse_covid_19_daily_reports'
 
 
-def main(vcs):
-    if vcs == 'git':
-        os.system('rm -rf ./data/external/covid_data/')
-        os.system(f'git clone {URL_COVID_DATA_GIT} {OUTPUT_FOLDER}')
-    elif vcs == 'svn':
-        os.system(f'svn export --force {URL_COVID_DATA_SVN} {OUTPUT_FOLDER}')
+def main():
+    os.system(
+        f'rm -r {paths.dir_csse_data} && mkdir {paths.dir_csse_data} &&'
+        f'cd {paths.dir_csse_data} &&'
+        f'git init &&'
+        f'git remote add -f origin {URL_COVID_DATA_GIT} &&'
+        f'git config core.sparseCheckout true &&'
+        f'echo "{DIR_COVID_DOWNLOAD}" >> .git/info/sparse-checkout &&'
+        f'git pull origin master'
+    )
 
 
 if __name__ == '__main__':
-    parser = argparse.ArgumentParser()
-    parser.add_argument(
-        'vcs',
-        default='git',
-        type=str,
-        help='Specifies the utilized version control system'
-    )
-    args = parser.parse_args()
-
-    main(vcs=args.vcs)
+    main()
