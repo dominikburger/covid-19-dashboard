@@ -37,9 +37,7 @@ def parse_covid_data():
 
     if not external_empty:
         print("updating covid data...")
-        # 'update_covid_data.py' uses git, the svn variant is prefered
-        # os.system('python3 src/data/update_covid_data.py')
-        os.system('python3 src/data/download_covid_data.py')
+        os.system('python3 src/data/update_covid_data.py')
         print("preparing cleaned dataset...")
         os.system('python3 src/data/make_dataset.py')
     else:
