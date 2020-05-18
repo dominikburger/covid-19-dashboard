@@ -11,6 +11,7 @@ import src.utils as utils
 import src.visualization.dashboard_objects as dbo
 
 utils.parse_covid_data()
+utils.parse_geo_reference()
 
 min_day, max_day = utils.get_day_range()
 days = pd.date_range(min_day, max_day, normalize=True)

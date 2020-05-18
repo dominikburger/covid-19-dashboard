@@ -27,6 +27,7 @@ def make_dataframe(path=None, days=None):
 
     return dataframe
 
+
 def parse_geo_reference():
     if paths.file_geo_reference.is_file():
         print("geo reference exists")
