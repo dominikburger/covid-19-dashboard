@@ -2,6 +2,7 @@ import src.paths as paths
 from datetime import datetime as dt
 import os
 import json
+import pandas as pd
 
 
 def check_folder_exists(path):
@@ -15,6 +16,16 @@ def get_day_range():
 
     return min(dates), max(dates)
 
+
+def make_dataframe(path=None, days=None):
+    dataframe = pd.DataFrame()
+
+    for day in days:
+        temp = pd.read_csv(path / f'{day}.csv')
+        temp.loc[:, 'date'] = pd.to_datetime(day)
+        dataframe = dataframe.append(temp)
+
+    return dataframe
 
 def parse_geo_reference():
     if paths.file_geo_reference.is_file():
