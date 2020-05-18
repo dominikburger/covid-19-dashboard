@@ -1,44 +1,27 @@
-import dash
-from dash.dependencies import Input, Output
+import pandas as pd
+import dash_table
 import dash_html_components as html
 import dash_core_components as dcc
-import pandas as pd
+from dash.dependencies import Input
+from dash.dependencies import Output
 import src.visualization.dashboard_objects as dbo
-import dash_table
 import src.visualization.styles as styles
 import src.paths as paths
 import src.utils as utils
-import os
-
-
-def make_dataframe(path=None, days=None):
-    dataframe = pd.DataFrame()
-
-    for day in days:
-        temp = pd.read_csv(path / f'{day}.csv')
-        temp.loc[:, 'date'] = pd.to_datetime(day)
-        dataframe = dataframe.append(temp)
-
-    return dataframe
-
-
-external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
+import src.visualization.dashboard_objects as dbo
 
 utils.parse_covid_data()
+
 min_day, max_day = utils.get_day_range()
 days = pd.date_range(min_day, max_day, normalize=True)
 days = days.strftime('%m-%d-%Y')
+df = utils.make_dataframe(path=paths.dir_processed_daily, days=days)
 
-df = make_dataframe(path=paths.dir_processed_daily, days=days)
 ts = dbo.TimeSeriesGraph(data=df, scale='linear', country_list='')
 
-app = dash.Dash(
-    'Covid-19 Dashboard',
-    external_stylesheets=external_stylesheets,
-    assets_folder=paths.dir_assets
-)
+external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 
-app.layout = html.Div(
+layout = html.Div(
     id='main-window',
     style=styles.main_window_style,
     children=[
@@ -203,67 +186,64 @@ app.layout = html.Div(
     ]
 )
 
-@app.callback(
-    [Output('tabs-example', 'children'),
-     Output('tabs-example', 'value')
-     ],
-    [Input('country_checklist', 'value')]
-)
-def update_output(country_list):
-    tabs = []
 
-    for idx, country in enumerate(country_list):
-        fig = dbo.make_delta_graph(df, country)
-        tabs.append(
-            dcc.Tab(
-                label=country,
-                value=f'tab_{idx}',
-                children=dcc.Graph(id=f'tab_{idx}_graph', figure=fig),
-                style=styles.tab_style,
-                selected_style=styles.tab_selected_style,
+def register_callbacks(app):
+    @app.callback(
+        [Output('tabs-example', 'children'),
+         Output('tabs-example', 'value')
+         ],
+        [Input('country_checklist', 'value')]
+    )
+    def update_output(country_list):
+        tabs = []
+
+        for idx, country in enumerate(country_list):
+            fig = dbo.make_delta_graph(df, country)
+            tabs.append(
+                dcc.Tab(
+                    label=country,
+                    value=f'tab_{idx}',
+                    children=dcc.Graph(id=f'tab_{idx}_graph', figure=fig),
+                    style=styles.tab_style,
+                    selected_style=styles.tab_selected_style,
+                )
             )
+
+        return tabs, 'tab_0'
+
+    @app.callback(
+        [
+            Output('map_graph', 'figure'),
+            Output('table_info_div', 'children'),
+            Output('value_confirmed_cases_total', 'children'),
+            Output('value_confirmed_deaths_total', 'children'),
+            Output('value_confirmed_recovered_total', 'children'),
+            Output('value_confirmed_active_total', 'children')
+        ],
+        [Input('date-picker', 'date')])
+    def update_output(date):
+        map_graph = dbo.make_map(df, date=pd.to_datetime(date))
+        table_info = dbo.make_table(df, date=pd.to_datetime(date))
+
+        day_mask = df['date'] == pd.to_datetime(date)
+        cases_total = '{:,.0f}'.format(df[day_mask]['confirmed'].sum())
+        deaths_total = '{:,.0f}'.format(df[day_mask]['deaths'].sum())
+        recovered_total = '{:,.0f}'.format(df[day_mask]['recovered'].sum())
+        active_total = '{:,.0f}'.format(df[day_mask]['active'].sum())
+
+        return (
+            map_graph, table_info, cases_total,
+            deaths_total, recovered_total, active_total
         )
 
-    return tabs, 'tab_0'
-
-
-@app.callback(
-    [
-        Output('map_graph', 'figure'),
-        Output('table_info_div', 'children'),
-        Output('value_confirmed_cases_total', 'children'),
-        Output('value_confirmed_deaths_total', 'children'),
-        Output('value_confirmed_recovered_total', 'children'),
-        Output('value_confirmed_active_total', 'children')
-    ],
-    [Input('date-picker', 'date')])
-def update_output(date):
-    map_graph = dbo.make_map(df, date=pd.to_datetime(date))
-    table_info = dbo.make_table(df, date=pd.to_datetime(date))
-
-    day_mask = df['date'] == pd.to_datetime(date)
-    cases_total = '{:,.0f}'.format(df[day_mask]['confirmed'].sum())
-    deaths_total = '{:,.0f}'.format(df[day_mask]['deaths'].sum())
-    recovered_total = '{:,.0f}'.format(df[day_mask]['recovered'].sum())
-    active_total = '{:,.0f}'.format(df[day_mask]['active'].sum())
-
-    return (
-        map_graph, table_info, cases_total,
-        deaths_total, recovered_total, active_total
-    )
-
-
-@app.callback(
-    [Output('timeseries', 'figure')],
-    [
-        Input('scale_radio', 'value'),
-        Input('country_checklist', 'value')
-    ])
-def update_output(scale, country_list):
-    ts = dbo.TimeSeriesGraph(data=df, country_list=country_list, scale=scale)
-    fig = ts.make_timeseries()
-    return [fig]
-
-
-if __name__ == '__main__':
-    app.run_server(host='0.0.0.0', debug=False)
+    @app.callback(
+        [Output('timeseries', 'figure')],
+        [
+            Input('scale_radio', 'value'),
+            Input('country_checklist', 'value')
+        ])
+    def update_output(scale, country_list):
+        ts = dbo.TimeSeriesGraph(data=df, country_list=country_list,
+                                 scale=scale)
+        fig = ts.make_timeseries()
+        return [fig]
