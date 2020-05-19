@@ -16,6 +16,4 @@ RUN pip install --user -r requirements.txt
 
 ENV PYTHONPATH="$PYTHONPATH:."
 ENTRYPOINT ["python3", "src/app.py"]
-WORKDIR /
-ENTRYPOINT ["bin/bash"]
 EXPOSE 8050
