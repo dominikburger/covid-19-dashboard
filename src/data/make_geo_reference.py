@@ -43,9 +43,8 @@ def main():
     gdf_clean = gdf_clean.replace(country_rename_dict)
 
     # dir exists check, overwriting in all cases
-    utils.check_folder_exists(paths.dir_processed_geo_reference)
-
-    gdf_clean.to_file(paths.dir_processed_geo_reference, driver='GeoJSON')
+    utils.check_folder_exists(paths.file_geo_reference)
+    gdf_clean.to_file(paths.file_geo_reference, driver='GeoJSON')
 
 
 if __name__ == '__main__':
