@@ -1,1 +1,1 @@
-docker build . --rm -t dashboard:0.9
+docker build . --rm -t covid-dashboard
