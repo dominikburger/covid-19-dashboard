@@ -1,7 +1,26 @@
 main_window_style = {
     'backgroundColor': '#fafafa',
-    'width': 'device-width',
+    'max-width': '100%',
+    'height': '98vh',
+    'margin': 0
 }
+
+nav_bar_style = {
+    'border': '1px solid #d6d6d6',
+     'border-radius': '0.25rem',
+     'backgroundColor': '#363636',
+     'display': 'flex',
+     'flex-direction': 'row',
+     'height': '10%',
+}
+
+header_style = {
+    'color': 'white',
+    'marginLeft': 10,
+    'font-size': '3.2rem',
+    'padding': '4px 0',
+    'width': '75%'
+ }
 
 cumulated_info_style = {
     'border': '1px solid #d6d6d6',
@@ -15,29 +34,38 @@ cumulated_info_style = {
     'marginBottom': 10,
     'marginLeft': 10,
     'marginRight': 10,
-    'width': '15%',
-    'alignCenter': True
+    'paddingTop': '5px',
+    'paddingBottom': '5px',
+    'width': '16%',
+}
+
+div_case_style = {
+    'width': '100%',
+    'height': '25%',
 }
 
 caption_case_style = {
     'display': 'inline-block',
     'color': '#363636',
     'fontSize': 20,
-    'marginTop': 25,
     'textAlign': 'center',
-    'width': '100%'
+    'width': '100%',
+    'height': '50%',
+    'marginBottom': 0,
+    'paddingBottom': 0
 }
 
 value_case_style = {
     'display': 'inline-block',
     'color': '#E14A4A',
-    'fontSize': 20,
+    'fontSize': 19,
     'textAlign': 'center',
-    'width': '100%'
+    'width': '100%',
+    'height': '50%'
 }
 
 date_picker_style = {
-    'backgroundColor': 'rgba(0, 0, 0, 0',
+    'backgroundColor': 'rgba(0, 0, 0, 0)',
     'color': '#363636',
     'display': 'flex',
     'margin': 'auto',
@@ -55,12 +83,13 @@ main_graph_div_style = {
     'marginLeft': 0,
     'marginRight': 0,
     'flex-direction': 'row',
-    'width': '84%',
-    'overflow': 'hidden'
+    'width': '85%',
 }
 
 map_graph_style = {
     'border': '1px solid #d6d6d6',
+    # 'display': 'flex',
+    # 'flex-shrink': 0,
     'border-radius': '0.25rem',
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
@@ -68,7 +97,8 @@ map_graph_style = {
     'marginBottom': 10,
     'marginLeft': 10,
     'marginRight': 10,
-    'width': '50%'
+    'width': '42%',
+    'height': 'auto'
 }
 
 table_info_style = {
@@ -82,7 +112,8 @@ table_info_style = {
     'marginRight': 10,
     'padding': 0,
     'overflow': 'hidden',
-    'width': '50%'
+    'width': '42%',
+    'height': 'auto'
 }
 
 toolbar_style = {
@@ -91,7 +122,7 @@ toolbar_style = {
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
     'display': 'flex',
-    'width': '15%',
+    'width': '16%',
     'flex-direction': 'column',
     'flex-shrink': 0,
     'marginTop': 10,
@@ -107,7 +138,7 @@ scale_style = {
     'marginBottom': 5,
     'marginLeft': 5,
     'marginRight': 5,
-    'width': '80%',
+    'width': '90%',
 }
 
 country_picker_style = {
@@ -115,7 +146,7 @@ country_picker_style = {
     'marginBottom': 5,
     'marginLeft': 5,
     'marginRight': 5,
-    'width': '80%',
+    'width': '90%',
     'textAlign': 'left'
 }
 
@@ -131,6 +162,7 @@ info_graphs_style = {
 }
 
 timeseries_div_style = {
+    'display': 'flex',
     'border': '1px solid #d6d6d6',
     'border-radius': '0.25rem',
     'box-shadow': '2px 2px 2px lightgrey',
@@ -139,10 +171,13 @@ timeseries_div_style = {
     'marginBottom': 10,
     'marginLeft': 10,
     'marginRight': 10,
-    'width': '50%',
+    'width': '42%',
+    'height': 'auto'
+
 }
 
 tabs_div_style = {
+    'display': 'flex',
     'border': '1px solid #d6d6d6',
     'border-radius': '0.25rem',
     'box-shadow': '2px 2px 2px lightgrey',
@@ -151,17 +186,19 @@ tabs_div_style = {
     'marginBottom': 10,
     'marginLeft': 10,
     'marginRight': 10,
-    'width': '50%'
+    'width': '42%',
+    'height': 'auto'
 }
 
 tabs_styles = {
-    # 'height': '35px'
+    'height': '10%',
     'borderBottom': '1px solid #d6d6d6'
 }
 
 tab_style = {
     'borderBottom': '1px solid #d6d6d6',
-    'padding': '2px',
+    'line-height': '10%',
+    # 'padding': '0',
 }
 
 tab_selected_style = {
@@ -170,5 +207,6 @@ tab_selected_style = {
     'backgroundColor': '#119dff',
     'background': '#363636',
     'color': 'white',
-    'padding': '2px'
+    'line-height': '10%',
+    # 'padding': '0',
 }
