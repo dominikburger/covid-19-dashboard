@@ -22,6 +22,18 @@ header_style = {
     'width': '75%'
  }
 
+first_row_div_style = {
+    'display': 'flex',
+    'width': '100%',
+    'height': '45%'
+}
+
+second_row_div_style = {
+    'display': 'flex',
+    'width': '100%',
+    'height': '45%'
+}
+
 cumulated_info_style = {
     'border': '1px solid #d6d6d6',
     'border-radius': '0.25rem',
@@ -88,10 +100,8 @@ main_graph_div_style = {
     'width': '85%',
 }
 
-map_graph_style = {
+map_graph_div_style = {
     'border': '1px solid #d6d6d6',
-    # 'display': 'flex',
-    # 'flex-shrink': 0,
     'border-radius': '0.25rem',
     'box-shadow': '2px 2px 2px lightgrey',
     'backgroundColor': '#f6f6f6',
@@ -101,6 +111,11 @@ map_graph_style = {
     'marginRight': 10,
     'width': '42%',
     'height': 'auto'
+}
+
+map_graph_style = {
+    'width': '100%',
+    'height': '100%'
 }
 
 table_info_style = {
@@ -178,6 +193,11 @@ timeseries_div_style = {
 
 }
 
+timeseries_graph_style = {
+    'width': '100%',
+    'height': '100%'
+}
+
 tabs_div_style = {
     'display': 'flex',
     'border': '1px solid #d6d6d6',
@@ -193,15 +213,20 @@ tabs_div_style = {
     'line-height': '0'
 }
 
+tabs_parents_style = {
+    'width': '100%',
+    'height': 'auto'
+}
+
 tabs_styles = {
-    'height': '10vh',
+    'height': '5vh',
     'borderBottom': '1px solid #d6d6d6',
     'zIndex': '99'
 }
 
 tab_style = {
-    'line-height': '0',
     'borderBottom': '1px solid #d6d6d6',
+    'line-height': '0',
 }
 
 tab_selected_style = {
@@ -210,4 +235,10 @@ tab_selected_style = {
     'backgroundColor': '#119dff',
     'background': '#363636',
     'color': 'white',
+    'line-height': '0',
+}
+
+date_diff_graph_style = {
+    'width': '100%',
+    'height': '35vh'
 }
