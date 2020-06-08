@@ -59,7 +59,7 @@ div_case_style = {
 caption_case_style = {
     'display': 'inline-block',
     'color': '#363636',
-    'fontSize': '24',
+    'fontSize': 'large',
     'textAlign': 'center',
     'width': '100%',
     'height': '40%',
@@ -70,7 +70,7 @@ caption_case_style = {
 value_case_style = {
     'display': 'inline-block',
     'color': '#E14A4A',
-    'fontSize': '24',
+    'fontSize': 'large',
     'textAlign': 'center',
     'width': '100%',
     'height': '40%',
