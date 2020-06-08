@@ -28,22 +28,11 @@ layout = html.Div(
     children=[
         # set page header
         html.Nav(className="nav-bar",
-                 style={
-                     'border': '1px solid #d6d6d6',
-                     'border-radius': '0.25rem',
-                     'backgroundColor': '#363636',
-                     'display': 'flex',
-                     'flex-direction': 'row',
-                 },
+                 style=styles.nav_bar_style,
                  children=[
                      html.H4(
                          children='COVID-19 Dashboard',
-                         style={
-                             'color': 'white',
-                             'marginLeft': 10,
-                             'font-size': '3.2rem',
-                             'width': '80%'
-                         }
+                         style=styles.header_style
                      ),
                      # 1st row place date picker
                      html.Div(
@@ -52,85 +41,105 @@ layout = html.Div(
                      ),
                  ]
         ),
-        # 2nd row place map and country table
+        # 1st row place map and country table
         html.Div(
-            id='second_div_row',
-            className='row',
-            style={'display': 'flex', 'width': '100%'},
+            id='first_row_div',
+            style=styles.second_row_div_style,
             children=[
                 html.Div(
                     id='cumulated_info',
-                    className='card',
+                    style=styles.cumulated_info_style,
                     children=[
                         html.Div(
-                            id='caption_confirmed_cases_total',
-                            children='Confirmed Cases Total',
-                            style=styles.caption_case_style
-                        ),
-                        html.P(
-                            id='value_confirmed_cases_total',
-                            children='',
-                            style=styles.value_case_style
-                        ),
-                        html.Div(
-                            id='caption_confirmed_deaths_total',
-                            children='Deaths Total',
-                            style=styles.caption_case_style
-                        ),
-                        html.P(
-                            id='value_confirmed_deaths_total',
-                            children='',
-                            style=styles.value_case_style
+                            id='div_confirmed_cases_total',
+                            style=styles.div_case_style,
+                            children=[
+                                html.P(
+                                    id='caption_confirmed_cases_total',
+                                    children='Confirmed Cases Total',
+                                    style=styles.caption_case_style
+                                ),
+                                html.P(
+                                    id='value_confirmed_cases_total',
+                                    children='',
+                                    style=styles.value_case_style
+                                ),
+                            ]
                         ),
                         html.Div(
-                            id='caption_confirmed_recovered_total',
-                            children='Recovered Total',
-                            style=styles.caption_case_style
-                        ),
-                        html.P(
-                            id='value_confirmed_recovered_total',
-                            children='',
-                            style=styles.value_case_style
+                            id='div_confirmed_deaths_total',
+                            style=styles.div_case_style,
+                            children=[
+                                html.P(
+                                    id='caption_confirmed_deaths_total',
+                                    children='Deaths Total',
+                                    style=styles.caption_case_style
+                                ),
+                                html.P(
+                                    id='value_confirmed_deaths_total',
+                                    children='',
+                                    style=styles.value_case_style
+                                ),
+                            ]
                         ),
                         html.Div(
-                            id='caption_confirmed_active_total',
-                            children='Active Total',
-                            style=styles.caption_case_style
+                            id='div_confirmed_recovered_total',
+                            style=styles.div_case_style,
+                            children=[
+                                html.P(
+                                    id='caption_confirmed_recovered_total',
+                                    children='Recovered Total',
+                                    style=styles.caption_case_style
+                                ),
+                                html.P(
+                                    id='value_confirmed_recovered_total',
+                                    children='',
+                                    style=styles.value_case_style
+                                ),
+                            ]
                         ),
-                        html.P(
-                            id='value_confirmed_active_total',
-                            children='',
-                            style=styles.value_case_style
-                        )
-
+                        html.Div(
+                            id='div_confirmed_active_total',
+                            style=styles.div_case_style,
+                            children=[
+                                html.P(
+                                    id='caption_confirmed_active_total',
+                                    children='Active Total',
+                                    style=styles.caption_case_style
+                                ),
+                                html.P(
+                                    id='value_confirmed_active_total',
+                                    children='',
+                                    style=styles.value_case_style
+                                ),
+                            ]
+                        ),
                     ],
-                    style=styles.cumulated_info_style
                 ),
+                # place map graph
                 html.Div(
-                    id='main_graph_div',
-                    style=styles.main_graph_div_style,
-                    children=[
-                        # place map graph
-                        html.Div(
-                            id='map_graph_div',
-                            children=dcc.Graph(id='map_graph'),
-                            style=styles.map_graph_style
-                        ),
-                        # place country table
-                        html.Div(
-                            id='table_info_div',
-                            children=dash_table.DataTable(),
-                            style=styles.table_info_style
-                        )
-                    ],
+                    id='map_graph_div',
+                    style=styles.map_graph_div_style,
+                    children=dcc.Graph(
+                        id='map_graph',
+                        style=styles.map_graph_style,
+                        config={'responsive': True},
+                    ),
+
+                ),
+                # place country table
+                html.Div(
+                    id='table_info_div',
+                    children=dash_table.DataTable(),
+                    style=styles.table_info_style
                 )
             ]
         ),
-        # 3rd row
+        # second row place timeseries and datediff table
         html.Div(
-            id='third_div_row',
+            id='second_row_div',
             className='col',
-            style={'display': 'flex', 'width': '100%'},
+            style=styles.second_row_div_style,
             children=[
                 # place toolbar
                 html.Div(
@@ -150,37 +159,32 @@ layout = html.Div(
                         )
                     ]
                 ),
-                # info graphs
+                # place timeseries graph
                 html.Div(
-                    id='info_graphs_div',
-                    style=styles.info_graphs_style,
-                    children=[
-                        html.Div(
-                            style=styles.timeseries_div_style,
-                            children=dcc.Graph(
-                                id='timeseries',
-                                style={'width': '100%'},
+                    style=styles.timeseries_div_style,
+                    children=dcc.Graph(
+                        id='timeseries',
+                        style=styles.timeseries_graph_style,
+                        responsive=True
+                    ),
+                ),
+                # place date diff graph
+                html.Div(
+                    style=styles.tabs_div_style,
+                    children=dcc.Tabs(
+                        id='tabs_main',
+                        value='tab_0',
+                        parent_style=styles.tabs_parents_style,
+                        style=styles.tabs_styles,
+                        children=[
+                            dcc.Tab(
+                                label='',
+                                value='',
+                                style=styles.tab_style,
+                                selected_style=styles.tab_selected_style,
                             ),
-                        ),
-                        html.Div(
-                            style=styles.tabs_div_style,
-                            children=[
-                                dcc.Tabs(
-                                    id='tabs-example',
-                                    value='tab_1',
-                                    style=styles.tabs_styles,
-                                    children=[
-                                        dcc.Tab(
-                                            label='',
-                                            value='',
-                                            style=styles.tab_style,
-                                            selected_style=styles.tab_selected_style,
-                                        ),
-                                    ]
-                                ),
-                            ]
-                        )
-                    ]
+                        ]
+                    ),
                 )
             ]
         )
@@ -190,8 +194,8 @@ layout = html.Div(
 
 def register_callbacks(app):
     @app.callback(
-        [Output('tabs-example', 'children'),
-         Output('tabs-example', 'value')
+        [Output('tabs_main', 'children'),
+         Output('tabs_main', 'value')
          ],
         [Input('country_checklist', 'value')]
     )
@@ -204,7 +208,12 @@ def register_callbacks(app):
                 dcc.Tab(
                     label=country,
                     value=f'tab_{idx}',
-                    children=dcc.Graph(id=f'tab_{idx}_graph', figure=fig),
+                    children=dcc.Graph(
+                        id=f'tab_{idx}_graph',
+                        figure=fig,
+                        style=styles.date_diff_graph_style,
+                        responsive=True
+                    ),
                     style=styles.tab_style,
                     selected_style=styles.tab_selected_style,
                 )
