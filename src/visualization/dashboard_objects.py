@@ -69,11 +69,10 @@ def make_map(df, date=None):
 
     layout = {
         'mapbox_style': "carto-positron",
-        'margin': {"r": 0, "t": 0, "l": 0, "b": 0},
-        'width': 790,
-        'height': 410,
         'paper_bgcolor': 'rgba(0,0,0,0)',
         'plot_bgcolor': 'rgba(0,0,0,0)',
+        'margin': {'r': 0, 't': 0, 'l': 0, 'b': 0},
+        'autosize': True,
     }
 
     fig = go.Figure(data=choro, layout=layout)
@@ -98,9 +97,6 @@ class TimeSeriesGraph:
             zerolinecolor='lightgrey',
         )
         self.layout = dict(
-            margin={"r": 10, "t": 10, "l": 10, "b": 10},
-            width=790,
-            height=410,
             xaxis_title='days since 100th confirmed case',
             yaxis_title='total confirmed cases per country',
             paper_bgcolor='#f6f6f6',
@@ -113,7 +109,9 @@ class TimeSeriesGraph:
             legend_orientation='h',
             legend={'x': 0, 'y': -0.15},
             xaxis=self.plot_lines,
-            yaxis=self.plot_lines
+            yaxis=self.plot_lines,
+            margin={'r': 10, 't': 10, 'l': 10, 'b': 10},
+            autosize=True,
         )
         self.fig = go.Figure(layout=self.layout)
 
@@ -347,24 +345,20 @@ def make_delta_graph(dataframe=None, country=None):
         linecolor='lightgrey',
         gridcolor='lightgrey',
         zerolinecolor='lightgrey',
+
     )
 
     layout = go.Layout(
-        width=750,
-        height=368,
         yaxis_title='confirmed new cases',
-        font={
-            'family': 'Roboto',
-            'size': 12,
-            'color': '#363636',
-        },
+        font={'family': 'Roboto', 'size': 12, 'color': '#363636'},
         legend_orientation='h',
         legend={'x': 0, 'y': -0.15},
         paper_bgcolor='#f6f6f6',
         plot_bgcolor='#f8f8f8',
-        margin=dict(t=10, l=5, r=5, b=5),
         xaxis=plot_lines,
-        yaxis=plot_lines
+        yaxis=plot_lines,
+        margin={'t': 10, 'l': 5, 'r': 5, 'b': 5},
+        autosize=True,
     )
 
     fig = go.Figure(data=traces, layout=layout)
