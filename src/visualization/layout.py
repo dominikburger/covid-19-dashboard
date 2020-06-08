@@ -209,7 +209,7 @@ def register_callbacks(app):
                     children=dcc.Graph(
                         id=f'tab_{idx}_graph',
                         figure=fig,
-                        style={'width': '100%', 'height': '37vh'},
+                        style={'width': '100%', 'height': '35vh'},
                         responsive=True
                     ),
                     style=styles.tab_style,
