@@ -47,21 +47,23 @@ div_case_style = {
 caption_case_style = {
     'display': 'inline-block',
     'color': '#363636',
-    'fontSize': 20,
+    'fontSize': '24',
     'textAlign': 'center',
     'width': '100%',
-    'height': '50%',
+    'height': '40%',
     'marginBottom': 0,
-    'paddingBottom': 0
+    'paddingTop': '10px',
 }
 
 value_case_style = {
     'display': 'inline-block',
     'color': '#E14A4A',
-    'fontSize': 19,
+    'fontSize': '24',
     'textAlign': 'center',
     'width': '100%',
-    'height': '50%'
+    'height': '40%',
+    'marginBottom': 0,
+    'paddingBottom': '10px',
 }
 
 date_picker_style = {
@@ -69,7 +71,7 @@ date_picker_style = {
     'color': '#363636',
     'display': 'flex',
     'margin': 'auto',
-    'float': 'right',
+    'float': 'left',
     'width': '15%',
     'zIndex': 99999,
     'justifyContent': 'right'
@@ -187,18 +189,19 @@ tabs_div_style = {
     'marginLeft': 10,
     'marginRight': 10,
     'width': '42%',
-    'height': 'auto'
+    'height': 'auto',
+    'line-height': '0'
 }
 
 tabs_styles = {
-    'height': '10%',
-    'borderBottom': '1px solid #d6d6d6'
+    'height': '10vh',
+    'borderBottom': '1px solid #d6d6d6',
+    'zIndex': '99'
 }
 
 tab_style = {
+    'line-height': '0',
     'borderBottom': '1px solid #d6d6d6',
-    'line-height': '10%',
-    # 'padding': '0',
 }
 
 tab_selected_style = {
@@ -207,6 +210,4 @@ tab_selected_style = {
     'backgroundColor': '#119dff',
     'background': '#363636',
     'color': 'white',
-    'line-height': '10%',
-    # 'padding': '0',
 }
