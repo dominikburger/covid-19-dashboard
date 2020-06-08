@@ -43,8 +43,8 @@ layout = html.Div(
         ),
         # 1st row place map and country table
         html.Div(
-            id='first_div_row',
-            style={'display': 'flex', 'width': '100%', 'height': '45%'},
+            id='first_row_div',
+            style=styles.second_row_div_style,
             children=[
                 html.Div(
                     id='cumulated_info',
@@ -119,12 +119,13 @@ layout = html.Div(
                 # place map graph
                 html.Div(
                     id='map_graph_div',
+                    style=styles.map_graph_div_style,
                     children=dcc.Graph(
                         id='map_graph',
-                        style={'width': '100%', 'height': '100%'},
+                        style=styles.map_graph_style,
                         config={'responsive': True},
                     ),
-                    style=styles.map_graph_style
+
                 ),
                 # place country table
                 html.Div(
@@ -136,9 +137,9 @@ layout = html.Div(
         ),
         # second row place timeseries and datediff table
         html.Div(
-            id='second_div_row',
+            id='second_row_div',
             className='col',
-            style={'display': 'flex', 'width': '100%', 'height': '45%'},
+            style=styles.second_row_div_style,
             children=[
                 # place toolbar
                 html.Div(
@@ -158,21 +159,22 @@ layout = html.Div(
                         )
                     ]
                 ),
-                # info graphs
+                # place timeseries graph
                 html.Div(
                     style=styles.timeseries_div_style,
                     children=dcc.Graph(
                         id='timeseries',
-                        style={'width': '100%', 'height': '100%'},
+                        style=styles.timeseries_graph_style,
                         responsive=True
                     ),
                 ),
+                # place date diff graph
                 html.Div(
                     style=styles.tabs_div_style,
                     children=dcc.Tabs(
                         id='tabs_main',
                         value='tab_0',
-                        parent_style={'width': '100%', 'height': 'auto'},
+                        parent_style=styles.tabs_parents_style,
                         style=styles.tabs_styles,
                         children=[
                             dcc.Tab(
@@ -209,7 +211,7 @@ def register_callbacks(app):
                     children=dcc.Graph(
                         id=f'tab_{idx}_graph',
                         figure=fig,
-                        style={'width': '100%', 'height': '35vh'},
+                        style=styles.date_diff_graph_style,
                         responsive=True
                     ),
                     style=styles.tab_style,
