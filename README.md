@@ -10,9 +10,10 @@ frame from disease outbreak up to the current day.
 ## Installation & Requirements
 At the moment, there are two ways to run the dashboard on your own machine:
 #### Anaconda
-Create a new Anaconda environment using the provided env.yml via
+Create a new Anaconda environment called `covid-dashboard` by using the provided environment.yml
+(the environment name is changeable by editing the first line in the yaml file):
 ```
-conda env create -f env.yml
+conda env create -f environment.yml
 ```
 You can then start up the dashboard running `python3 src/app.py` 
 
