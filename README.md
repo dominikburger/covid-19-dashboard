@@ -8,29 +8,29 @@ the disease and shows both daily charts as well as charts covering the time
 frame from disease outbreak up to the current day. 
 
 ## Installation & Requirements
+The following instructions assume that the your current working directory is a local copy of the repository.
 At the moment, there are two ways to run the dashboard on your own machine:
 #### Anaconda
-Create a new Anaconda environment called `covid-dashboard` by using the provided environment.yml
+Create a new Anaconda environment called *covid-dashboard* by using the provided *environment.yml*
 (the environment name is changeable by editing the first line in the yaml file):
 ```
 conda env create -f environment.yml
 ```
-You can then start up the dashboard running `python3 src/app.py` 
+You can then activate the enviroment and start up the dashboard running `python3 src/app.py` 
 
 #### Docker
 Build your own docker image using the provided Dockerfile via
 ```
-docker build path/to/Dockerfile --rm -t covid-dashboard
+docker build . --rm -t covid-dashboard
 ```
 to create an image called *covid-dashboard*. When running the container, it is 
 advised to mount a volume where the downloaded and parsed data is stored. This 
-can be a local folder (don't forget to change the host path in the `docker run` 
-command) or a docker volume for example. If you want to use a docker volume,
-you can create one using 
+can be a local folder (don't forget to change the host path in the `docker run [...]` 
+command if do so) or a docker volume for example. If you want to use the latter,
+you can create a volume named *dashboard-volume* using:
 ```
 docker volume create dashboard-volume
 ```
-
 After the build process has successfully completed, you can run the image in a
 container via
 ```
