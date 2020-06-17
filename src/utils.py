@@ -1,9 +1,13 @@
-import src.paths as paths
+from src import paths
 from datetime import datetime as dt
 import os
 import json
 import pandas as pd
-
+from src.data import download_covid_data
+from src.data import update_covid_data
+from src.data import download_geo_data
+from src.data import make_geo_reference
+from src.data import make_dataset
 
 def check_folder_exists(path):
     path = path.parents[0]
@@ -29,13 +33,15 @@ def make_dataframe(path=None, days=None):
 
 
 def parse_geo_reference():
+    print(str(paths.file_geo_reference))
+    print(paths.file_geo_reference.is_file())
     if paths.file_geo_reference.is_file():
         print("geo reference exists")
     else:
         print("geo reference does not exist, downloading...")
-        os.system('python3 src/data/download_geo_data.py')
+        download_geo_data.main()
         print("Creating geo reference...")
-        os.system('python3 src/data/make_geo_reference.py')
+        make_geo_reference.main()
 
 
 def load_geo_reference():
@@ -49,11 +55,11 @@ def parse_covid_data():
 
     if not external_empty:
         print("updating covid data...")
-        os.system('python3 src/data/update_covid_data.py')
+        update_covid_data.main()
         print("preparing cleaned dataset...")
-        os.system('python3 src/data/make_dataset.py')
+        make_dataset.main()
     else:
         print("covid data does not exist, downloading...")
-        os.system('python3 src/data/download_covid_data.py')
+        download_covid_data.main()
         print("preparing cleaned dataset...")
-        os.system('python3 src/data/make_dataset.py')
+        make_dataset.main()

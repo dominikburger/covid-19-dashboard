@@ -3,7 +3,7 @@ import dash_table
 import pandas as pd
 import numpy as np
 import plotly.graph_objs as go
-import src.utils as utils
+from src import utils
 from dash_table.Format import Format
 
 
