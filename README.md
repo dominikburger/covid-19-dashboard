@@ -16,7 +16,7 @@ Create a new Anaconda environment called *covid-dashboard* by using the provided
 ```
 conda env create -f environment.yml
 ```
-You can then activate the enviroment and start up the dashboard running `python3 src/app.py` 
+You can then activate the enviroment and start up the dashboard running `python3 app.py` 
 
 #### Docker
 Build your own docker image using the provided Dockerfile via
