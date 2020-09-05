@@ -2,7 +2,7 @@ from pathlib import Path
 
 
 # directories
-dir_project = Path().cwd()
+dir_project = Path(__file__).parents[1]
 dir_data_external = dir_project / 'data' / 'external'
 dir_csse_data = dir_data_external / 'csse_data'
 dir_covid_data = dir_csse_data / 'csse_covid_19_data'

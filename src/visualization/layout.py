@@ -8,7 +8,7 @@ import src.visualization.dashboard_objects as dbo
 import src.visualization.styles as styles
 import src.paths as paths
 import src.utils as utils
-import src.visualization.dashboard_objects as dbo
+
 
 utils.parse_covid_data()
 utils.parse_geo_reference()
