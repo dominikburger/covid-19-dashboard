@@ -7,7 +7,31 @@ from src import utils
 from dash_table.Format import Format
 
 
+def _check_date(df, date):
+    """
+    Sets a default date if none is given.
+    :param df: The prepared dataframe
+    :type df: pandas.Dataframe
+    :param date: string representation of a date in format MM-DD-YYYY
+    :type date: str
+    :return: a subset of the dataframe depending on the given date
+    :rtype: pandas.Dataframe
+    """
+    DEFAULT_DATE = '03-15-2020'
+
+    if date is not None:
+        return df[df['date'] == pd.to_datetime(date)].copy()
+    else:
+        return df[df['date'] == pd.to_datetime(DEFAULT_DATE)].copy()
+
+
 def make_date_picker():
+    """
+    Creates the date picker object on the dashboard.
+    :return: a date picker / calender that allows for the selection
+        of a specific date.
+    :rtype: dash_core_components.DatePickerSingle
+    """
     min_day, max_day = utils.get_day_range()
     return dcc.DatePickerSingle(
         id='date-picker',
@@ -21,14 +45,23 @@ def make_date_picker():
 
 
 def make_map(df, date=None):
+    """
+    Creates a Figure object that is used to display the world map. Additionally,
+    specifics like color scale, and the hover text are defined.
+    :param df: a dataframe containing the values of the various case types
+        sorted by country and date.
+    :type df: pandas.Dataframe
+    :param date: a date formatted as DD-MM-YYYY
+    :type date: str
+    :return: a figure object which represents a map graph
+    :rtype: plotly.graph_objs.Figure
+    """
+
+    df_map = _check_date(df, date)
+
     hovertemplate = \
         '<b>Confirmed</b>: %{z:,}<br>' + \
         '%{text}<extra>%{location}</extra>'
-
-    if date is not None:
-        df_map = df[df['date'] == pd.to_datetime(date)].copy()
-    else:
-        df_map = df[df['date'] == pd.to_datetime('03-15-2020')].copy()
 
     color_scale = [
         [0, '#ffeecc'],
@@ -37,6 +70,7 @@ def make_map(df, date=None):
         [1, '#ffbbcc']
     ]
 
+    # text that is displayed, when hovering over a country
     hover_text = [
         '<b>Deaths</b>: {:,.0f}<br>'.format(de) + \
         '<b>Recovered</b>: {:,.0f}<br>'.format(re) + \
@@ -58,11 +92,6 @@ def make_map(df, date=None):
         geojson=utils.load_geo_reference(),
         autocolorscale=False,
         colorscale=color_scale,
-        # colorbar={
-        #     'thickness': 15,
-        #     'bgcolor': '#f6f6f6',
-        #     'x': 1
-        # },
         showscale=False,
         marker={'opacity': 0.6}
     )
@@ -81,6 +110,12 @@ def make_map(df, date=None):
 
 
 class TimeSeriesGraph:
+    """
+    A class that is used to for a time series representation of the covid-19
+    data. The data may both be viewed in tabular form and as a graphical
+    representation. It can be used to select specific subsets of
+    countries and dates.
+    """
 
     def __init__(self, data, country_list, scale):
         self.data = data.copy()
@@ -124,6 +159,13 @@ class TimeSeriesGraph:
         )
 
     def _scale_values(self, data):
+        """
+        Scales the given values linearly or logarithmically.
+        :param data: A series containing numerical values.
+        :type data: pandas.Series
+        :return: scaled values
+        :rtype: pandas.Series
+        """
         if self.scale == 'linear' or self.scale is None:
             return data
         elif self.scale == 'log':
@@ -131,23 +173,53 @@ class TimeSeriesGraph:
 
     @staticmethod
     def _get_min_mask(data, factor):
+        """
+        Creates a boolean mask of a numerical series. The condition checks for
+        values that are greater or equal than 'factor'.
+        :param data: A series containing numerical values.
+        :type data: pandas.Series
+        :param factor: a value which is used as the minimum value of the sliced
+            series.
+        :type factor: int
+        :return: a boolean mask of the given series.
+        :rtype: pandas.Series.
+        """
         mask = data.ge(factor)
         return mask
 
     def _mask_country(self, country):
+        """
+        Creates a boolean mask of a series depending on the value of 'country'.
+        :param country: name of a country.
+        :type country: str
+        :return: A subset containing only values of the given country.
+        :rtype: pandas.Dataframe
+        """
         mask = self.data_pivot.columns.get_level_values(1) == country
         masked_country = self.data_pivot.iloc[:, mask].copy()
 
         return masked_country
 
     def _select_country(self, country_list):
-
+        """
+        Checks the type of 'country_list'. If the type is string, the value is
+        converted to a list.
+        :param country_list: One or more country names.
+        :type country_list: str or list
+        :return: None
+        :rtype: None
+        """
         if isinstance(country_list, str):
             self.country_list = [country_list]
         if isinstance(country_list, list):
             self.country_list = country_list
 
     def make_timeseries(self):
+        """
+        Creates a Figure object that is used to display the timeseries graph.
+        :return: a figure object which contains a timeseries graph.
+        :rtype: plotly.graph_objs.Figure
+        """
 
         for country in self.country_list:
             masked_country = self._mask_country(country)
@@ -180,10 +252,17 @@ class TimeSeriesGraph:
 
 
 def make_table(df=None, date=None):
-    if date is not None:
-        df_table = df[df['date'] == pd.to_datetime(date)].copy()
-    else:
-        df_table = df[df['date'] == pd.to_datetime('04-20-2020')].copy()
+    """
+    Creates a table object that is used to display the various case types
+    on a given date over all countries.
+    :param df: The prepared dataframe
+    :type df: pandas.Dataframe
+    :param date: A string representation of a date in format MM-DD-YYYY
+    :type date: str
+    :return: A table with the dataframe contents
+    :rtype: dash_table.DataTable
+    """
+    df_table = _check_date(df, date)
 
     columns = ['country', 'confirmed', 'deaths', 'recovered', 'active']
     df_table = df_table.sort_values(by=columns[1], ascending=False)
@@ -242,6 +321,12 @@ def make_table(df=None, date=None):
 
 
 def make_scale():
+    """
+    Creates the radio item object on the dashboard, which is used for the
+    selection of the timeseries value scaling.
+    :return: A radio item object with the options 'linear' or 'logarithmic'
+    :rtype: dash_core_components.RadioItems
+    """
     return dcc.RadioItems(
         id='scale_radio',
         options=[
@@ -253,8 +338,17 @@ def make_scale():
     )
 
 
-def make_country_picker(dataframe=None):
-    country_list = sorted(dataframe['country'].unique())
+def make_country_picker(df=None):
+    """
+    Creates the dropdown object on the dashboard, which is used for the
+    selection of countries that are displayed in the graphs for timeseries
+    and case delta.
+    :param df: The prepared dataframe
+    :type df: pandas.Dataframe
+    :return: A dropdown list with country names to choose from.
+    :rtype: dash_core_components.Dropdown
+    """
+    country_list = sorted(df['country'].unique())
     country_options = [{"label": country, "value": country}
                        for country in country_list]
 
@@ -269,15 +363,40 @@ def make_country_picker(dataframe=None):
 
 
 class DataLoader:
+    """
+    Used for loading the preprocessed csv files. It also allows to load a
+    specific day range instead of all days available.
+    """
     def __init__(self):
         self.data = None
         self.day_range = None
 
     def _get_days(self, start_date, end_date):
+        """
+        Creates a list of days in format MM-DD-YYY.
+        :param start_date: Start of the time interval.
+        :type start_date: str
+        :param end_date: End of the time interval.
+        :type end_date: str
+        :return: a list of converted days.
+        :rtype: DatetimeIndex
+        """
         days = pd.date_range(start_date, end_date)
         self.day_range = days.strftime('%m-%d-%Y')
 
     def load_data(self, data_path, start_date, end_date):
+        """
+        Create a dataset from multiple csv files by concatenating them.
+        :param data_path: Path where the csv files are stored
+        :type data_path: pathlib.Path
+        :param start_date: Start of the time interval.
+        :type start_date: str
+        :param end_date: End of the time interval.
+        :type end_date: str
+        :return: None
+        :rtype: None
+        """
+
         self._get_days(start_date, end_date)
 
         self.data = pd.DataFrame()
@@ -289,38 +408,87 @@ class DataLoader:
 
 
 class DataParser(DataLoader):
-
+    """
+    Used to prepare the data for the day-to-day case difference plot. For a
+    selected country the daily difference in cases and the moving average
+    is calculated.
+    """
     def __init__(self):
         super().__init__()
         self.country = None
 
     def set_country(self, country=None):
+        """
+        Creates a separate dataframe containing only case numbers for the
+        selected country.
+        :param country: Country name.
+        :type country: str
+        :return: Subset dataframe for the given country.
+        :rtype: pandas.Dataframe
+        """
         mask_country = self.data['country'] == country
         self.country = self.data[mask_country].copy()
         self.country = self.country.set_index('date').sort_index()
 
     def get_column_delta(self, column=None):
+        """
+        Calculates the one day delta for total cases and appends it as a new
+        column to the dataframe. Note: This method can be partially replaced
+        by using the pandas.Dataframe.diff method.
+        :param column: Column name on which the diff calculation is applied.
+        :type column: str
+        :return: None
+        :rtype: None
+        """
         shift_column = self.country[column].shift(1).squeeze()
         delta_column = self.country[column] - shift_column
         self.country.loc[:, f'{column}_delta'] = delta_column
 
     def get_moving_average(self, column=None, **kwargs):
+        """
+        Calculates the moving average of a chosen window size and appends it
+        as a new column to the dataframe.
+        :param column: Column name on which the moving average calculation is
+            applied.
+        :type column: str
+        :param kwargs: kwargs to be used for the pandas.Dataframe.rolling
+            method.
+        :type kwargs: Any
+        :return: None
+        :rtype: None
+        """
         df_ma = self.country[column].rolling(**kwargs).mean()
         self.country.loc[:, f'{column}_moving_avg'] = df_ma
 
 
 def make_delta_graph(dataframe=None, country=None):
+    """
+    Creates the graph object that is used to visualize the new daily cases
+    on the dashboard (includes moving average).
+    :param dataframe: The dataframe containing prepared data.
+    :type dataframe: pandas.Dataframe
+    :param country: Country name.
+    :type country: str
+    :return: a figure object which contains a daily new cases graph
+    :rtype: plotly.graph_objs.Figure
+    """
+    MA_WINDOW_SIZE = 3
+
     parser = DataParser()
     parser.data = dataframe.copy()
 
     parser.set_country(country)
     parser.get_column_delta('confirmed')
-    parser.get_moving_average('confirmed_delta', window=3, center=True)
+    parser.get_moving_average(
+        'confirmed_delta',
+        window=MA_WINDOW_SIZE,
+        center=True
+    )
 
     hovertemplate = '%{y:,.0f}<extra></extra>'
 
     scatter_trace = go.Scatter(
-        name='3-day moving average',
+        name=f'{MA_WINDOW_SIZE}-day moving average',
         x=parser.country.index,
         y=parser.country['confirmed_delta_moving_avg'],
         marker_color='#e14a4a',
