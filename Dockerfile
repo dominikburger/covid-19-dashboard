@@ -1,7 +1,7 @@
 ### Ubuntu base image ###
 FROM python:3.8-slim-buster
 
-MAINTAINER Dominik Burger <dominik.burger@gmx.org>
+LABEL maintainer="Dominik Burger <dominik.burger@gmx.org>"
 
 ENV workdir /home/appuser/app
 
@@ -15,5 +15,5 @@ WORKDIR ${workdir}
 RUN pip install --user -r requirements.txt
 
 ENV PYTHONPATH="$PYTHONPATH:."
-ENTRYPOINT ["python3", "src/app.py"]
+ENTRYPOINT ["python3", "app.py"]
 EXPOSE 8050
