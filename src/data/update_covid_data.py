@@ -1,12 +1,26 @@
 import os
 from src import paths
+import subprocess
 
 
 def main():
-    os.system(
-        f'cd {paths.dir_csse_data} && '
-        f'git reset --hard origin/master && '
-        f'git pull origin master'
+    result_gc = subprocess.run(
+        ["git", "gc"],
+        cwd=paths.dir_csse_data,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE
+    )
+    result_reset = subprocess.run(
+        ["git", "reset", "--hard", "origin/master"],
+        cwd=paths.dir_csse_data,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE
+    )
+    result_pull = subprocess.run(
+        ["git", "pull", "origin", "master"],
+        cwd=paths.dir_csse_data,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE
     )
 
 
