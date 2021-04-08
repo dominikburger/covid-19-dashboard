@@ -53,6 +53,7 @@ The dashboard is web based and can be accessed via browsing to
 use `http://127.0.0.1:8050/` or `http://localhost:8050/`.
 
 ## Resources
-1. ["COVID-19 Data Repository 
-by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University"](https://github.com/CSSEGISandData/COVID-19)
-2. Made with Natural Earth. Free vector and raster map data @ [naturalearthdata.com](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/).
+1. [COVID-19 Data Repository 
+by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University](https://github.com/CSSEGISandData/COVID-19)
+2. [1:110m Physical Vectors (Land), version 4.0.0. Made with Natural Earth. Free vector and raster map data @naturalearthdata.com](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/)
+3. [Dash User Guide](https://dash.plotly.com/)
