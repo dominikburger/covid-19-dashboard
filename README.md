@@ -6,7 +6,7 @@ utilization of the Python Dash library.**
 
 ![dashboard_preview](docs/dashboard_preview.png)
 This project provides a dashboard for the visualization of infection data of the ongoing COVID-19 
-pandemic. Building upon the "COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University" (1) and raster map data from
+pandemic. Building upon the "COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University" (1) and vector data by
 Natural Earth (2), the dashboard itself is created by using the Python framework Dash (3). It provides information about the current worldwide development of 
 the disease and shows both daily charts, as well as charts covering the time frame from disease outbreak up to the current day. 
 
