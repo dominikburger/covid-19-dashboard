@@ -1,11 +1,14 @@
 # COVID-19 Dashboard
+**Disclaimer:
+This dashboard and data visualization is in no way to be used for sophisticated decision making regarding the
+current events of the pandemic. This is a personal project with the main focus of gaining knowledge on the 
+utilization of the Python Dash library.**
+
 ![dashboard_preview](docs/dashboard_preview.png)
-This project aims to visualize the infection data of the ongoing COVID-19 
-pandemic in an understandable and appealing way. Building on the CSSE dataset of
-the Johns Hopkins Unversity, we are using the Python framework Dash to create a
-dashboard. It provides information about the current worldwide development of 
-the disease and shows both daily charts as well as charts covering the time
-frame from disease outbreak up to the current day. 
+This project provides a dashboard for the visualization of infection data of the ongoing COVID-19 
+pandemic. Building upon the "COVID-19 Data Repository by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University" (1) and raster map data from
+Natural Earth (2), the dashboard itself is created by using the Python framework Dash (3). It provides information about the current worldwide development of 
+the disease and shows both daily charts, as well as charts covering the time frame from disease outbreak up to the current day. 
 
 ## Installation & Requirements
 The following instructions assume that the your current working directory is a local copy of the repository.
@@ -46,5 +49,10 @@ specified above.
 
 ## Usage
 The dashboard is web based and can be accessed via browsing to 
-`http://0.0.0.0:8050/` with a browser of your choice.
+`http://0.0.0.0:8050/` with a browser of your choice (On Linux / Docker). If you are running the dashboard on a Windows machine you need to 
+use `http://127.0.0.1:8050/` or `http://localhost:8050/`.
 
+## Resources
+1. ["COVID-19 Data Repository 
+by the Center for Systems Science and Engineering (CSSE) at Johns Hopkins University"](https://github.com/CSSEGISandData/COVID-19)
+2. Made with Natural Earth. Free vector and raster map data @ [naturalearthdata.com](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-land/).
