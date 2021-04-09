@@ -472,7 +472,7 @@ def make_delta_graph(dataframe=None, country=None):
     :return: a figure object which contains a daily new cases graph
     :rtype: plotly.graph_objs.Figure
     """
-    MA_WINDOW_SIZE = 3
+    MA_WINDOW_SIZE = 7
 
     parser = DataParser()
     parser.data = dataframe.copy()
